@@ -1,0 +1,13 @@
+-input scene2_01_diffuse.txt -size 200 200 -output output2_01.tga
+-input scene2_02_ambient.txt -size 200 200 -output output2_02.tga
+-input scene2_03_colored_lights.txt -size 200 200 -output output2_03.tga -normals normals2_03.tga
+-input scene2_04_perspective.txt -size 200 200 -output output2_04.tga -normals normals2_04.tga
+-input scene2_05_inside_sphere.txt -size 200 200 -output output2_05.tga -depth 9 11 depth2_05.tga -normals normals2_05.tga -shade_back
+-input scene2_05_inside_sphere.txt -size 200 200 -output output2_05_no_back.tga
+-input scene2_06_plane.txt -size 200 200 -output output2_06.tga -depth 8 20 depth2_06.tga -normals normals2_06.tga
+-input scene2_06_plane.txt -size 200 200 -output output2_06.tga -depth 8 20 depth2_06.tga -normals normals2_06.tga
+-input scene2_07_sphere_triangles.txt -size 200 200 -output output2_07.tga -depth 9 11 depth2_07.tga -normals normals2_07.tga -shade_back
+-input scene2_07_sphere_triangles.txt -size 200 200 -output output2_07_no_back.tga
+-input scene2_08_cube.txt -size 200 200 -output output2_08.tga
+-input scene2_09_bunny_200.txt -size 200 200 -output output2_09.tga
+-input scene2_10_bunny_1k.txt -size 200 200 -output output2_10.tga

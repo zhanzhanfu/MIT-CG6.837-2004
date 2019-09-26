@@ -1,0 +1,16 @@
+
+2.sphere.cpp中 flag=true的位置影响shadows中 epsilon的作用
+
+3.
+The -shade_back command line option should be used when there are transparent objects in the scene.
+The dot product of the normal and ray direction is negative when we are outside the object, 
+and positive when we are inside. 
+You will use this to detect whether the new index of refraction is 1 or 
+the index of the hit object ?? why not 1/index
+
+4.
+Note that in this naive version, semi-transparent objects still cast opaque shadows. 
+Implement something better for extra credit.  未实现
+
+
+5. gem 有点区别

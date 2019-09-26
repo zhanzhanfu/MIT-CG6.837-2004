@@ -1,0 +1,54 @@
+#include "ifs.h"
+#include <stdlib.h>
+
+
+IFS::IFS()
+{
+}
+
+IFS::~IFS() {
+	delete matrix;
+	delete prob;
+}
+
+void IFS::Input(char * input_file) {
+	FILE* input = fopen(input_file, "r");
+	assert(input_file != NULL);
+	fscanf(input, "%d", &n);
+	matrix = new Matrix[n];
+	prob = new float[n];
+	for (int i=0; i<n; ++i)
+	{
+		fscanf(input, "%f", &prob[i]);
+		matrix[i].Read3x3(input);
+	}
+	fclose(input);
+}
+
+void IFS::Render(Image *image, int num_points, int num_iters) {
+	int width = image->Width();
+	int height = image->Height();
+
+	for (int i=0; i<num_points;++i)
+	{
+		Vec2f v = Vec2f(rand()*1.0f / RAND_MAX, rand()*1.0f / RAND_MAX);
+		for (int j=0;j<num_iters;j++)
+		{
+			int k;
+			float sum = 0;
+			float t = rand()*1.0f / RAND_MAX;
+			for (k = 0; k<n;k++)
+			{
+				sum += prob[k];
+				if (sum >= t)
+					break;
+			}
+			matrix[k].Transform(v);
+		}
+		if (v.x() >= 0 && v.x() <= 1 && v.y() >= 0 && v.y() <= 1) {
+			image->SetPixel((int)(v.x() * width), (int)(v.y() * height), Vec3f(0, 0, 0));
+		}
+	}
+
+}
+

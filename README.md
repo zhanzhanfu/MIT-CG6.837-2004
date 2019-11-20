@@ -1,4 +1,4 @@
-# MIT-CG6.837-2004  
+# MIT-CG6.837-2004  过段时间重写以及添加  
   
 课程网站  
 6.837 Intro to Computer Graphics, Fall 2004  

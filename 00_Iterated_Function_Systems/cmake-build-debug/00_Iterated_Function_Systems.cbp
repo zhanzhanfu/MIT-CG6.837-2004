@@ -82,22 +82,19 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/00_Iterated_Function_Systems/include/image.C">
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/00_Iterated_Function_Systems/src/image.C">
 			<Option target="ifs"/>
 		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/00_Iterated_Function_Systems/include/image.h">
-			<Option target="ifs"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/00_Iterated_Function_Systems/include/matrix.C">
-			<Option target="ifs"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/00_Iterated_Function_Systems/include/matrix.h">
-			<Option target="ifs"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/00_Iterated_Function_Systems/src/ifs.h">
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/00_Iterated_Function_Systems/src/image.h">
 			<Option target="ifs"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/00_Iterated_Function_Systems/src/main.cpp">
+			<Option target="ifs"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/00_Iterated_Function_Systems/src/matrix.C">
+			<Option target="ifs"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/00_Iterated_Function_Systems/src/matrix.h">
 			<Option target="ifs"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/00_Iterated_Function_Systems/CMakeLists.txt">

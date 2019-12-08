@@ -3,19 +3,12 @@ project(01_Ray_Casting)
 
 set(CMAKE_CXX_STANDARD 11)
 
-include_directories(${PROJECT_SOURCE_DIR}/include)
-
-aux_source_directory(./include INCLUDE_SRCS)
+aux_source_directory(./src SRCS)
 
 set(SOURCE_FILES
-        src/main.cpp
-        src/ifs.h
-        ${INCLUDE_SRCS}
+        ${SRCS}
         )
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/out)
 
-add_executable(ifs ${SOURCE_FILES})
-
-
-add_executable(01_Ray_Casting main.cpp)
+add_executable(raytracer ${SOURCE_FILES})

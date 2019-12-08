@@ -1,8 +1,8 @@
 #pragma once
 
-#include <matrix.h>
-#include <image.h>
-#include <vectors.h>
+#include "matrix.h"
+#include "image.h"
+#include "vectors.h"
 
 class IFS {
 public:

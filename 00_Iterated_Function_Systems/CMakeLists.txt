@@ -3,14 +3,10 @@ project(00_Iterated_Function_Systems)
 
 set(CMAKE_CXX_STANDARD 11)
 
-include_directories(${PROJECT_SOURCE_DIR}/include)
-
-aux_source_directory(./include INCLUDE_SRCS)
+aux_source_directory(./src SRCS)
 
 set(SOURCE_FILES
-        src/main.cpp
-        src/ifs.h
-        ${INCLUDE_SRCS}
+        ${SRCS}
         )
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/out)

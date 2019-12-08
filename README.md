@@ -20,7 +20,34 @@ http://groups.csail.mit.edu/graphics/classes/6.837/F04/index.html
 
 1. Ray Casting 
 
+   这里使用 Algebraic 代数法计算交点，Geometric 再说。
 
+   注意点1：
+
+   ```
+   class Object3D {
+   //virtual ~Object3D() {delete material;}  error
+   virtual ~Object3D() {}  //right
+   
+   Material *material;
+   };
+   //因为scene_parser.C中 ~SceneParser已经 delete materials[i]
+   //这个错误在clion中只会返回异常: 0xC0000005，而在vs中会指向错误的地方，当clion中返回值!=0时，又找不到出错的地方，可以在vs中找。
+   ```
+
+   注意点2：
+
+   image 对应于 （0,200）and 比例（0,1）
+
+   OrthographicCamera 的 center 在（0,0），因此产生的光线对应于 （-1,1）* size
+
+   注意点3：
+
+   error: multiple definition of 函数多次定义
+
+   解决办法一：把函数定义写到 .cpp；
+
+   解决办法二：在 .h文件中，把定义与声明写在一起，即把函数定义写在类内。
 
 
 

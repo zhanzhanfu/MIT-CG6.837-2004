@@ -55,6 +55,20 @@ error: multiple definition of 函数多次定义
 
 在使用 Geometric 法计算交点时，为了得到与样例相符的图片，忽略 t 是否在视线后面，即 camera center 是否在球体内部，永远取 t = min(t1, t2)
 
+### 2. Transformations
+
+**注意点1：**
+
+三角形计算交点可以使用 Matrix.C 中的 det3x3
+
+**注意点2：**
+
+把 rd 从 world-space 转换到 object-space 的时候不要 normalize()
+
+**注意点3：**
+
+scene_16 目前只能使用球体的 Algebraic 算法正确渲染，Geometric 法有点问题，对 scale 没处理好。
+
 参考：
 
 https://github.com/Birdy-C/MIT-6-837

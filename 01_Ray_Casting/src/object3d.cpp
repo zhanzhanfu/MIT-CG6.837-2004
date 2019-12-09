@@ -31,7 +31,6 @@
 
 //Geometric
 bool Sphere::intersect(const Ray &r, Hit &h, float tmin) {
-    bool flag = false;
     Vec3f ro = r.getOrigin() - center;
     Vec3f rd = r.getDirection();
 
@@ -51,9 +50,9 @@ bool Sphere::intersect(const Ray &r, Hit &h, float tmin) {
     //    t = t2;
     if (t > tmin && t < h.getT()) {
         h.set(t, material, r);
-        flag = true;
+        return true;
     }
-    return flag;
+    return false;
 }
 
 

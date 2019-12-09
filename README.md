@@ -22,7 +22,9 @@ http://groups.csail.mit.edu/graphics/classes/6.837/F04/index.html
 
 这里使用 Algebraic 和 Geometric 计算交点。
 
-**注意点1：**不要 delete 同一片内存两次，不需要在 ~Object3D() 中 delete material; 因为 material 申请内存的操作不在这个类中，由其他类负责。
+**注意点1：**
+
+不要 delete 同一片内存两次，不需要在 ~Object3D() 中 delete material; 因为 material 申请内存的操作不在这个类中，由其他类负责。
 
 ```
 class Object3D {
@@ -49,7 +51,9 @@ error: multiple definition of 函数多次定义
 
 解决办法二：在 .h文件中，把定义与声明写在一起，即把函数定义写在类内。
 
-**注意点4：**在使用 Geometric 法计算交点时，为了得到与样例相符的图片，忽略 t 是否在视线后面，即 camera center 是否在球体内部，永远取 t = min(t1, t2)
+**注意点4：**
+
+在使用 Geometric 法计算交点时，为了得到与样例相符的图片，忽略 t 是否在视线后面，即 camera center 是否在球体内部，永远取 t = min(t1, t2)
 
 参考：
 

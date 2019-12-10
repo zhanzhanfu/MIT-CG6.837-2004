@@ -14,11 +14,11 @@ http://groups.csail.mit.edu/graphics/classes/6.837/F04/index.html
 - src 文件夹包括课程提供的 .h .C 和自己写的.h .cpp
 - out 文件夹包括.exe .txt .tga
 
-### 0. Iterated Function Systems
+### 0. Iterated Function Systems （完成）
 
 产生 num 个随机点，经过 iters 次矩阵（随机选取）变换，保存到图片中对应位置。 
 
-### 1. Ray Casting
+### 1. Ray Casting （完成）
 
 这里使用 Algebraic 和 Geometric 计算交点。
 

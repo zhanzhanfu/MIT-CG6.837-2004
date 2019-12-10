@@ -67,7 +67,13 @@ error: multiple definition of 函数多次定义
 
 **注意点3：**
 
-scene_16 目前只能使用球体的 Algebraic 算法正确渲染，Geometric 法有点问题，对 scale 没处理好。
+scene_16
+
+注意 object-space 中 t 代表的是长度还是比例，注意 rd_len != 1 引起的问题。
+
+球体的 Algebraic 算法中，定义 a = rd.Dot3(rd) 即可解决。
+
+球体的 Geometric 算法中，因为 tt = sqrt(radius * radius - d2) 是长度，所以令 tp = -ro.Dot3(rd) / (rd_len) 也为长度，计算出 t，再令 t = t / rd_len，转换为比例，进行后续步骤。 
 
 参考：
 

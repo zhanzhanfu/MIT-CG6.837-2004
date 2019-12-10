@@ -55,7 +55,7 @@ error: multiple definition of 函数多次定义
 
 在使用 Geometric 法计算交点时，为了得到与样例相符的图片，忽略 t 是否在视线后面，即 camera center 是否在球体内部，永远取 t = min(t1, t2)
 
-### 2. Transformations
+### 2. Transformations （完成）
 
 **注意点1：**
 

@@ -75,6 +75,26 @@ scene_16
 
 球体的 Geometric 算法中，因为 tt = sqrt(radius * radius - d2) 是长度，所以令 tp = -ro.Dot3(rd) / (rd_len) 也为长度，计算出 t，再令 t = t / rd_len，转换为比例，进行后续步骤。 
 
+### 3. Phong_Shaing
+
+**注意点1：**
+
+由于课程的 OpenGL 版本太旧了，暂时跳过这一步骤，之后看情况添加 OpenGL core 库和 glfw 库
+
+**注意点2：**
+
+Phong 与 BlinnPhong 的区别在于，前者在 exponent 较小的时候，会产生明显的断层现象。
+
+**注意点3：**
+
+Flat shading (visible facets)  使用多边形的 normal，因此产生可见面。
+
+Gouraud interpolation 使用顶点 vertex 的 normal，因此精度较低。
+
+Phong interpolation 把 vertex.normal 在光栅化中插值为 pixel.normal，精度最高。
+
+
+
 参考：
 
 https://github.com/Birdy-C/MIT-6-837

@@ -83,7 +83,7 @@ scene_16
 
 **注意点2：**
 
-Phong 与 BlinnPhong 的区别在于，前者在 exponent 较小的时候，会产生明显的断层现象。
+Phong 与 BlinnPhong 的区别在于，前者在 v, l 同向时且 exponent 较小的时候，会产生明显的断层现象。
 
 **注意点3：**
 

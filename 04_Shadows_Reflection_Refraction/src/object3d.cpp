@@ -158,4 +158,11 @@ void Group::addObject(int index, Object3D *obj) {
     objects[index] = obj;
 }
 
+bool Group::intersectShadowRay(const Ray &r, Hit &h, float tmin) {
+    for (int i = 0; i < num_objects; ++i) {
+        if (objects[i]->intersect(r, h, tmin))
+            return true;
+    }
+}
+
 

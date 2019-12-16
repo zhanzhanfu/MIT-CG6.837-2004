@@ -99,7 +99,7 @@ public:
     bool intersect(const Ray &r, Hit &h, float tmin) override;
 
     void addObject(int index, Object3D *obj);
-
+    bool intersectShadowRay(const Ray &r, Hit &h, float tmin);
     int num_objects;
     Object3D **objects;
 };

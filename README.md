@@ -10,9 +10,11 @@ http://groups.csail.mit.edu/graphics/classes/6.837/F04/index.html
 
 环境配置：
 
-- Win10 + Clion
-- src 文件夹包括课程提供的 .h .C 和自己写的.h .cpp
-- out 文件夹包括.exe .txt .tga
+- Win10 + Clion + Freeglut
+- src 文件夹包括课程提供的、自己写的.h .cpp
+- include 文件夹包括 freeglut 头文件
+- lib 文件夹包括 freeglutd.lib，由 cmake 和 vs 生成
+- out 文件夹包括.exe .txt .tga 和 freeglutd.dll
 
 ### 0. Iterated Function Systems （完成）
 
@@ -59,7 +61,7 @@ error: multiple definition of 函数多次定义
 
 **注意点1：**
 
-三角形计算交点可以使用 Matrix.C 中的 det3x3
+三角形计算交点可以使用 Matrix.cpp 中的 det3x3
 
 **注意点2：**
 
@@ -79,7 +81,7 @@ scene_16
 
 **注意点1：**
 
-由于课程的 OpenGL 版本太旧了，跳过这一步骤。
+补充了 OpenGL 的内容。
 
 **注意点2：**
 
@@ -89,11 +91,11 @@ Phong 与 BlinnPhong 的区别在于，前者在 v, l 同向时且 exponent 较�
 
 Flat shading (visible facets)  使用多边形的 normal，因此产生可见面。
 
-Gouraud interpolation 使用顶点 vertex 的 normal，因此精度较低。
+Gouraud interpolation 使用顶点 vertex 的 normal，比 Flat shading 好。
 
 Phong interpolation 把 vertex.normal 在光栅化中插值为 pixel.normal，精度最高。
 
-### 4. Shadows, Reflection & Refraction（完成）
+### 4. Shadows, Reflection & Refraction（opengl部分未完成）
 
 **注意点1：**
 
@@ -118,4 +120,3 @@ RayTracer::traceRay() 中的 indexOfRefraction 参数可以省略，这个参数
 https://github.com/Birdy-C/MIT-6-837
 
 https://github.com/Aesma/CG-Project3-3
-

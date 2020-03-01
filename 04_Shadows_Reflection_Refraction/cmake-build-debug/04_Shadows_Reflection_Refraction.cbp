@@ -4,7 +4,7 @@
 	<Project>
 		<Option title="04_Shadows_Reflection_Refraction"/>
 		<Option makefile_is_custom="1"/>
-		<Option compiler="gcc"/>
+		<Option compiler="clang"/>
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
@@ -22,14 +22,15 @@
 				<Option working_dir="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/out"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
-				<Option compiler="gcc"/>
+				<Option compiler="clang"/>
 				<Compiler>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/include/c++"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/include/c++/x86_64-w64-mingw32"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/include/c++/backward"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/include"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/include-fixed"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/../../../../x86_64-w64-mingw32/include"/>
+					<Add directory="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/include"/>
+					<Add directory="C:\Program Files\LLVM\lib\clang\9.0.0\include"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.21.27702\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt"/>
 				</Compiler>
 				<MakeCommands>
 					<Build command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/cmake-build-debug/Makefile&quot;  VERBOSE=1 raytracer"/>
@@ -43,14 +44,15 @@
 				<Option working_dir="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/out"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
-				<Option compiler="gcc"/>
+				<Option compiler="clang"/>
 				<Compiler>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/include/c++"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/include/c++/x86_64-w64-mingw32"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/include/c++/backward"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/include"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/include-fixed"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/../../../../x86_64-w64-mingw32/include"/>
+					<Add directory="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/include"/>
+					<Add directory="C:\Program Files\LLVM\lib\clang\9.0.0\include"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.21.27702\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt"/>
 				</Compiler>
 				<MakeCommands>
 					<Build command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/cmake-build-debug/Makefile&quot;  VERBOSE=1 raytracer/fast"/>
@@ -105,9 +107,6 @@
 			<Option target="raytracer"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/object3d.h">
-			<Option target="raytracer"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/rayTracer.h">
 			<Option target="raytracer"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/scene_parser.C">

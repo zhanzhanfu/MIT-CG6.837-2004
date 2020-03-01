@@ -3,11 +3,12 @@ project(03_Phong_Shading)
 
 set(CMAKE_CXX_STANDARD 11)
 
-include_directories(${PROJECT_SOURCE_DIR}/include)
-aux_source_directory(${PROJECT_SOURCE_DIR}/src SRCS)
-set(SOURCE_FILES
-        ${SRCS}
-        )
+include_directories(include)
+link_directories(lib)
+
+aux_source_directory(src SRC)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/out)
-add_executable(raytracer ${SOURCE_FILES})
-target_link_libraries(raytracer ${PROJECT_SOURCE_DIR}/lib/libglfw3.a)
+
+add_executable(raytracer ${SRC})
+target_link_libraries(raytracer freeglutd.lib)
+

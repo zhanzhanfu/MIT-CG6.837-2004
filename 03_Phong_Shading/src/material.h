@@ -1,7 +1,8 @@
 #ifndef _MATERIAL_H_
 #define _MATERIAL_H_
 
-#include "vectors.h"
+#include "ray.h"
+#include "hit.h"
 #include <algorithm>
 // ====================================================================
 // ====================================================================
@@ -23,6 +24,8 @@ public:
     virtual Vec3f Shade(const Ray &ray, const Hit &hit, const Vec3f &dirToLight,
                         const Vec3f &lightColor) const = 0;
 
+    virtual void glSetMaterial() const = 0;
+
 protected:
 
     // REPRESENTATION
@@ -40,24 +43,14 @@ public:
 
     ~PhongMaterial() override {}
 
-    Vec3f Shade(const Ray &ray, const Hit &hit, const Vec3f &dirToLight, const Vec3f &lightColor) const override {
-        Vec3f normal = hit.getNormal();
-        Vec3f v = -1 * ray.getDirection();
-        Vec3f l = dirToLight;
-        //diff
-        float diff = std::max(normal.Dot3(l), 0.0f);
-        Vec3f diffuse = diff * diffuseColor * lightColor;
-        //spec
-        Vec3f h = v + l;
-        h.Normalize();
-        float spec = pow(max(normal.Dot3(h), 0.0f), exponent);
-        Vec3f specular = spec * specularColor * lightColor;
-        //ans
-        Vec3f color = diffuse + specular;
-        return color;
-    }
+    virtual Vec3f Shade(const Ray &ray, const Hit &hit, const Vec3f &l, const Vec3f &lightColor) const;
 
 
+    virtual void glSetMaterial() const;
+
+    Vec3f getSpecularColor() const { return specularColor; }
+
+private:
     Vec3f specularColor;
     float exponent;
 };

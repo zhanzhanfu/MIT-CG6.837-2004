@@ -4,7 +4,7 @@
 	<Project>
 		<Option title="03_Phong_Shading"/>
 		<Option makefile_is_custom="1"/>
-		<Option compiler="gcc"/>
+		<Option compiler="clang"/>
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
@@ -22,15 +22,15 @@
 				<Option working_dir="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/out"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
-				<Option compiler="gcc"/>
+				<Option compiler="clang"/>
 				<Compiler>
 					<Add directory="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/include"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/include/c++"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/include/c++/x86_64-w64-mingw32"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/include/c++/backward"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/include"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/include-fixed"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/../../../../x86_64-w64-mingw32/include"/>
+					<Add directory="C:\Program Files\LLVM\lib\clang\9.0.0\include"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.21.27702\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt"/>
 				</Compiler>
 				<MakeCommands>
 					<Build command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/cmake-build-debug/Makefile&quot;  VERBOSE=1 raytracer"/>
@@ -44,15 +44,15 @@
 				<Option working_dir="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/out"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
-				<Option compiler="gcc"/>
+				<Option compiler="clang"/>
 				<Compiler>
 					<Add directory="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/include"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/include/c++"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/include/c++/x86_64-w64-mingw32"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/include/c++/backward"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/include"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/include-fixed"/>
-					<Add directory="C:/Program Files/mingw-w64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.1.0/../../../../x86_64-w64-mingw32/include"/>
+					<Add directory="C:\Program Files\LLVM\lib\clang\9.0.0\include"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.21.27702\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt"/>
 				</Compiler>
 				<MakeCommands>
 					<Build command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/cmake-build-debug/Makefile&quot;  VERBOSE=1 raytracer/fast"/>
@@ -88,31 +88,73 @@
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/camera.h">
 			<Option target="raytracer"/>
 		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/image.C">
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/glCanvas.cpp">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/glCanvas.h">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/group.cpp">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/group.h">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/image.cpp">
 			<Option target="raytracer"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/image.h">
 			<Option target="raytracer"/>
 		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/light.cpp">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/light.h">
+			<Option target="raytracer"/>
+		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/main.cpp">
 			<Option target="raytracer"/>
 		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/matrix.C">
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/material.cpp">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/material.h">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/matrix.cpp">
 			<Option target="raytracer"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/matrix.h">
 			<Option target="raytracer"/>
 		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/object3d.cpp">
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/plane.cpp">
 			<Option target="raytracer"/>
 		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/object3d.h">
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/plane.h">
 			<Option target="raytracer"/>
 		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/scene_parser.C">
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/scene_parser.cpp">
 			<Option target="raytracer"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/scene_parser.h">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/sphere.cpp">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/sphere.h">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/transform.cpp">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/transform.h">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/triangle.cpp">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/triangle.h">
 			<Option target="raytracer"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/CMakeLists.txt">

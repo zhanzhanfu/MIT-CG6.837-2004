@@ -1,11 +1,15 @@
 #include "scene_parser.h"
 #include "camera.h"
 #include "object3d.h"
+#include "group.h"
 #include "image.h"
 #include "light.h"
+#include "glCanvas.h"
+#include <GL/freeglut.h>
 #include <cstring>
 #include <iostream>
 
+using namespace std;
 
 char *input_file = nullptr;
 int width = 100;
@@ -15,12 +19,17 @@ float depth_min = 0;
 float depth_max = 1;
 char *depth_file = nullptr;
 char *normal_file = nullptr;
-
 bool shade_back = false;
+bool gui = false;
+int theta_steps = 0;
+int phi_steps = 0;
+bool gouraud = false;
 
 void argParser(int argc, char **argv);
 
-void render();
+void render() {
+
+}
 
 int main(int argc, char **argv) {
 
@@ -29,26 +38,33 @@ int main(int argc, char **argv) {
     // raytracer -input scene3_02_cube_perspective.txt -size 200 200 -output output3_02.tga -gui
     argParser(argc, argv);
 
-    SceneParser scene(input_file);
-    Camera *camera = scene.getCamera();
-    Object3D *group = scene.getGroup();
-    Vec3f ambientColor = scene.getAmbientLight();
+    SceneParser *scene = new SceneParser(input_file);
+    Camera *camera = scene->getCamera();
+    Object3D *group = scene->getGroup();
+    Vec3f ambientColor = scene->getAmbientLight();
 
     Image image(width, height);
-    image.SetAllPixels(scene.getBackgroundColor());
+    image.SetAllPixels(scene->getBackgroundColor());
     Image depthImage(width, height);
     depthImage.SetAllPixels(Vec3f(0.0, 0.0, 0.0));
     Image normalImage(width, height);
     normalImage.SetAllPixels(Vec3f(0.0, 0.0, 0.0));
+
+    if(gui){
+        glutInit(&argc, argv);
+        GLCanvas glCanvas;
+        glCanvas.initialize(scene, render);
+        return 0;
+    }
+
 
     for (int i = 0; i < width; ++i) {
         for (int j = 0; j < height; ++j) {
             float x = float(i) / float(width);
             float y = float(j) / float_t(height);
             Ray ray = camera->generateRay(Vec2f(x, y));
-            Hit hit(INFINITY, nullptr, Vec3f(0.0, 0.0, 0.0));
-            bool flag = group->intersect(ray, hit, camera->getTMin());
-            if (flag) {
+            Hit hit;
+            if (group->intersect(ray, hit, camera->getTMin())) {
                 //shadow_back
                 Vec3f normal = hit.getNormal();
                 Vec3f rd = ray.getDirection();
@@ -67,12 +83,12 @@ int main(int argc, char **argv) {
                 Vec3f diffuseColor = material->getDiffuseColor();
                 Vec3f ambient = diffuseColor * ambientColor;
                 color += ambient;
-                for (int k = 0; k < scene.getNumLights(); ++k) {
-                    Light *light = scene.getLight(k);
+                for (int k = 0; k < scene->getNumLights(); ++k) {
+                    Light *light = scene->getLight(k);
                     Vec3f pos = hit.getIntersectionPoint();
                     Vec3f l, lightColor;
-                    float d; //not use
-                    light->getIllumination(pos, l, lightColor, d);
+                    float distance; //not use
+                    light->getIllumination(pos, l, lightColor, distance);
                     Vec3f c = material->Shade(ray, hit, l, lightColor);
                     color += c;
                 }
@@ -93,10 +109,6 @@ int main(int argc, char **argv) {
     if (normal_file != nullptr)
         normalImage.SaveTGA(normal_file);
     return 0;
-}
-
-void render() {
-
 }
 
 void argParser(int argc, char **argv) {
@@ -132,7 +144,19 @@ void argParser(int argc, char **argv) {
             normal_file = argv[i];
         } else if (!strcmp(argv[i], "-shade_back")) {
             shade_back = true;
-        } else {
+        } else if (!strcmp(argv[i], "-gui")) {
+            gui = true;
+        } else if (!strcmp(argv[i], "-tessellation")) {
+            i++;
+            assert(i < argc);
+            theta_steps = atoi(argv[i]);
+            i++;
+            assert(i < argc);
+            phi_steps = atoi(argv[i]);
+        }else if (!strcmp(argv[i], "-gouraud")) {
+            gouraud = true;
+        }
+        else {
             printf("whoops error with command line argument %d: '%s'\n", i, argv[i]);
             assert(0);
         }

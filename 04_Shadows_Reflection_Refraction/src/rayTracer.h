@@ -36,7 +36,7 @@ Vec3f RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight, Hit &
         for (int k = 0; k < scene->getNumLights(); ++k) {
             Light *light = scene->getLight(k);
             Vec3f l, lightColor;
-            float dis; //not be used
+            float dis;
             light->getIllumination(pos, l, lightColor, dis);
             //shadows
             Ray ray_shadows(pos, l);

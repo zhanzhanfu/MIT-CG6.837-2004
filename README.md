@@ -16,6 +16,8 @@ http://groups.csail.mit.edu/graphics/classes/6.837/F04/index.html
 - lib 文件夹包括 freeglutd.lib，由 cmake 和 vs 生成
 - out 文件夹包括.exe .txt .tga 和 freeglutd.dll
 
+
+
 ### 0. Iterated Function Systems （完成）
 
 产生 num 个随机点，经过 iters 次矩阵（随机选取）变换，保存到图片中对应位置。 
@@ -41,9 +43,9 @@ Material *material;
 
 **注意点2：**
 
-image 对应于 （0,200）and 比例（0,1）
+image 对应于 （0, 200）and 比例（0, 1）
 
-OrthographicCamera 的 center 在（0,0），因此产生的光线对应于 （-1,1）* size
+OrthographicCamera 的 center 在（0, 0），因此产生的光线对应于 （-1, 1）* size
 
 **注意点3：**
 
@@ -87,31 +89,61 @@ scene_16
 
 Phong 与 BlinnPhong 的区别在于，前者在 v, l 同向时且 exponent 较小的时候，会产生明显的断层现象。
 
+注意点3：
+
+OpenGL 画球体中，phi_steps 作为纬度的步长，取到首尾， theta_steps 作为经度的步长，取首不取尾。把球体定义为 quad，比 定义为 triangle 简单。
+
 **注意点3：**
 
-Flat shading (visible facets)  使用多边形的 normal，因此产生可见面。
+Flat shading (visible facets)  使用 quad 的 normal，quad 是一个平面，因此产生可见面。
 
-Gouraud interpolation 使用顶点 vertex 的 normal，比 Flat shading 好。
+Gouraud interpolation 使用顶点 vertex 的 normal，效果比 Flat shading 好。
 
-Phong interpolation 把 vertex.normal 在光栅化中插值为 pixel.normal，精度最高。
+Phong interpolation 把 vertex.normal 在光栅化中插值为 pixel.normal，精度最高，这是 pipeline 中的做法。
 
-### 4. Shadows, Reflection & Refraction（opengl部分未完成）
+### 4. Shadows, Reflection & Refraction（完成）
 
 **注意点1：**
 
-正交相机判断阴影的方法，直接设 float tmin = 0.001f; 而不是 getTmin() + 0.001f;
+正交相机判断阴影的方法，直接设 float tmin = 0.0001f; 而不是 getTmin() + 0.0001f;
 
 **注意点2：**
 
-RayTracer::traceRay() 中的 indexOfRefraction 参数可以省略，这个参数被认为是空气的折射率，即 1.0
+要多使用 OpenGL previsualization，能够找出大部分关于反射和折射的问题，在 scene4_07 8 9 涉及球体的内部反射折射问题，只能使用 Algebraic 算法来求交点，Geometric 法求交会减少射线的产生，发生错误。
 
 **注意点3：**
 
-不使用 material::Shade()，使用 RayTracer::shade()，更符合程序结构吧。
+```c++
+RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight, Hit &hit);
+```
+
+省略了相机所处的 indexOfRefraction，默认为空气，即 1.0；
+
+把 hit 作为参数，是为了在画 RayTree 中的反射和折射线，不然缺少交点参数。
+
+这里 weight 没有使用到，因为 max_bounces  <= 5，而 Raytrace in one weekend 资料中符合物理的光线追踪，max_bounces 取 50次。
 
 **注意点4：**
 
-未实现半透明物体的阴影着色。
+不在 RayTracer 中单独设置 mirrorDirection 和 transmittedDirection 这两个函数，参考 Raytrace in one weekend 中的结构，把 shading， reflect，refract 所需的操作都定义到 Material 类中，感觉代码会简洁，易扩展。
+
+```c++
+Vec3f PhongMaterial::Shade(const Ray &ray, const Hit &hit, const Vec3f &l, const Vec3f &lightColor) const;
+bool PhongMaterial::reflect(const Ray &ray, const Hit &hit, Vec3f &attenuation, Ray &reflected) const;
+bool PhongMaterial::refract(const Ray &ray, const Hit &hit, Vec3f &attenuation, Ray &refracted) const;
+```
+
+！！！尤其注意的一点是 Shade 这个函数中，必须判断 normal 与 rd 的方向关系，由于前面的内容没有涉及内部着色，这个问题会在 gem.txt 的测试中暴露出来，由于这个问题在 OpenGL previsualization 中也不会显示，因此找了好久好久好久好久好久。
+
+```c++
+if(normal.Dot3(rd) > 0)    normal = -1 * normal;
+```
+
+**注意点5：**
+
+tmin 这个数据其实可以设置在 hit 类中，但由于延续课程的风格，就放在函数参数中了。
+
+
 
 
 

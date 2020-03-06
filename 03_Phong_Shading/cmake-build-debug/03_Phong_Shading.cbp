@@ -94,12 +94,6 @@
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/glCanvas.h">
 			<Option target="raytracer"/>
 		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/group.cpp">
-			<Option target="raytracer"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/group.h">
-			<Option target="raytracer"/>
-		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/image.cpp">
 			<Option target="raytracer"/>
 		</Unit>
@@ -127,34 +121,16 @@
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/matrix.h">
 			<Option target="raytracer"/>
 		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/plane.cpp">
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/object3d.cpp">
 			<Option target="raytracer"/>
 		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/plane.h">
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/object3d.h">
 			<Option target="raytracer"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/scene_parser.cpp">
 			<Option target="raytracer"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/scene_parser.h">
-			<Option target="raytracer"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/sphere.cpp">
-			<Option target="raytracer"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/sphere.h">
-			<Option target="raytracer"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/transform.cpp">
-			<Option target="raytracer"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/transform.h">
-			<Option target="raytracer"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/triangle.cpp">
-			<Option target="raytracer"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/src/triangle.h">
 			<Option target="raytracer"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/03_Phong_Shading/CMakeLists.txt">

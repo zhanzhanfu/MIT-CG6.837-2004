@@ -11,7 +11,11 @@ extern int SPECULAR_FIX_WHICH_PASS;
 
 Vec3f PhongMaterial::Shade(const Ray &ray, const Hit &hit, const Vec3f &l, const Vec3f &lightColor) const {
     Vec3f normal = hit.getNormal();
-    Vec3f v = -1 * ray.getDirection();
+    Vec3f rd = ray.getDirection();
+
+    if(normal.Dot3(rd) > 0)
+        normal = -1 * normal;
+    Vec3f v = -1 * rd;
     v.Normalize();
     //diff
     Vec3f diffuse = diffuseColor * lightColor * std::max(normal.Dot3(l), 0.0f);
@@ -24,18 +28,60 @@ Vec3f PhongMaterial::Shade(const Ray &ray, const Hit &hit, const Vec3f &l, const
     return color;
 }
 
+bool PhongMaterial::reflect(const Ray &ray, const Hit &hit, Vec3f &attenuation, Ray &reflected) const {
+    if(reflectiveColor.Length() < 0.0001)
+        return false;
+    Vec3f ray_in = ray.getDirection();
+    Vec3f normal = hit.getNormal();
+    //if(ray_in.Dot3(normal) > 0)
+    //    normal = -1 * normal;
+    Vec3f ray_out = ray_in - 2.0f * normal.Dot3(ray_in) * normal;
+    ray_out.Normalize();
+    reflected = Ray(hit.getIntersectionPoint(), ray_out);
+    attenuation = reflectiveColor;
+    return true;
+}
+
+
+bool PhongMaterial::refract(const Ray &ray, const Hit &hit, Vec3f &attenuation, Ray &refracted) const {
+    if(transparentColor.Length() < 0.0001)
+        return false;
+    Vec3f ray_in = ray.getDirection();
+    Vec3f normal = hit.getNormal();
+    float ni_over_nt;
+    if (ray_in.Dot3(normal) > 0) {
+        normal = -1 * normal;
+        ni_over_nt = indexOfRefraction;
+    } else {
+        ni_over_nt = 1.0f / indexOfRefraction;
+    }
+    Vec3f v = ray_in * -1;
+    float NoV = normal.Dot3(v);
+    float t = 1 - ni_over_nt * ni_over_nt * (1 - NoV * NoV);
+    if (t > 0) {
+        Vec3f ray_out = (ni_over_nt * NoV - sqrt(t)) * normal - ni_over_nt * v;
+        ray_out.Normalize();
+        refracted = Ray(hit.getIntersectionPoint(), ray_out);
+        attenuation = transparentColor;
+        return true;
+    }else{
+        return false;
+    }
+}
+
+
 void PhongMaterial::glSetMaterial() const {
     GLfloat one[4] = {1.0, 1.0, 1.0, 1.0};
     GLfloat zero[4] = {0.0, 0.0, 0.0, 0.0};
     GLfloat specular[4] = {
-            getSpecularColor().r(),
-            getSpecularColor().g(),
-            getSpecularColor().b(),
+            specularColor.r(),
+            specularColor.g(),
+            specularColor.b(),
             1.0};
     GLfloat diffuse[4] = {
-            getDiffuseColor().r(),
-            getDiffuseColor().g(),
-            getDiffuseColor().b(),
+            diffuseColor.r(),
+            diffuseColor.g(),
+            diffuseColor.b(),
             1.0};
 
     // NOTE: GL uses the Blinn Torrance version of Phong...
@@ -77,4 +123,10 @@ void PhongMaterial::glSetMaterial() const {
 
 #endif
 }
+
+
+
+
+
+
 

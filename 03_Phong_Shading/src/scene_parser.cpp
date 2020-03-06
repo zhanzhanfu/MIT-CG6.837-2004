@@ -5,13 +5,7 @@
 #include "matrix.h"
 #include "camera.h"
 #include "light.h"
-#include "material.h"
 #include "object3d.h"
-#include "group.h"
-#include "sphere.h"
-#include "plane.h"
-#include "triangle.h"
-#include "transform.h"
 
 #define M_PI 3.14159265358979323846
 #define DegreesToRadians(x) ((M_PI * x) / 180.0f)

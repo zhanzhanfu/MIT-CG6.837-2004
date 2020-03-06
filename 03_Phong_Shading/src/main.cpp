@@ -1,7 +1,6 @@
 #include "scene_parser.h"
 #include "camera.h"
 #include "object3d.h"
-#include "group.h"
 #include "image.h"
 #include "light.h"
 #include "glCanvas.h"
@@ -63,7 +62,7 @@ int main(int argc, char **argv) {
             float x = float(i) / float(width);
             float y = float(j) / float_t(height);
             Ray ray = camera->generateRay(Vec2f(x, y));
-            Hit hit;
+            Hit hit(INFINITY);
             if (group->intersect(ray, hit, camera->getTMin())) {
                 //shadow_back
                 Vec3f normal = hit.getNormal();
@@ -89,8 +88,7 @@ int main(int argc, char **argv) {
                     Vec3f l, lightColor;
                     float distance; //not use
                     light->getIllumination(pos, l, lightColor, distance);
-                    Vec3f c = material->Shade(ray, hit, l, lightColor);
-                    color += c;
+                    color += material->Shade(ray, hit, l, lightColor);
                 }
                 image.SetPixel(i, j, color);
                 normalImage.SetPixel(i, j, Vec3f(fabs(normal.x()), fabs(normal.y()), fabs(normal.z())));

@@ -88,16 +88,34 @@
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/camera.h">
 			<Option target="raytracer"/>
 		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/image.C">
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/glCanvas.cpp">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/glCanvas.h">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/image.cpp">
 			<Option target="raytracer"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/image.h">
 			<Option target="raytracer"/>
 		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/light.cpp">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/light.h">
+			<Option target="raytracer"/>
+		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/main.cpp">
 			<Option target="raytracer"/>
 		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/matrix.C">
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/material.cpp">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/material.h">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/matrix.cpp">
 			<Option target="raytracer"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/matrix.h">
@@ -109,7 +127,13 @@
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/object3d.h">
 			<Option target="raytracer"/>
 		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/scene_parser.C">
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/rayTree.cpp">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/rayTree.h">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/scene_parser.cpp">
 			<Option target="raytracer"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/04_Shadows_Reflection_Refraction/src/scene_parser.h">

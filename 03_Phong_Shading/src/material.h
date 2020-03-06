@@ -4,21 +4,15 @@
 #include "ray.h"
 #include "hit.h"
 #include <algorithm>
-// ====================================================================
-// ====================================================================
-
-// You will extend this class in later assignments
 
 class Material {
 
 public:
 
-    // CONSTRUCTORS & DESTRUCTOR
     Material(const Vec3f &d_color) { diffuseColor = d_color; }
 
     virtual ~Material() {};
 
-    // ACCESSORS
     virtual Vec3f getDiffuseColor() const { return diffuseColor; }
 
     virtual Vec3f Shade(const Ray &ray, const Hit &hit, const Vec3f &dirToLight,
@@ -28,7 +22,6 @@ public:
 
 protected:
 
-    // REPRESENTATION
     Vec3f diffuseColor;
 
 };

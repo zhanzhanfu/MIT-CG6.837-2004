@@ -17,8 +17,7 @@ public:
     virtual ~Light() {}
 
     // VIRTUAL METHODS
-    virtual void getIllumination(const Vec3f &p, Vec3f &dir, Vec3f &col,
-                                 float &distanceToLight) const = 0;
+    virtual void getIllumination(const Vec3f &p, Vec3f &dir, Vec3f &col, float &distanceToLight) const = 0;
 
     virtual void glInit(int id) = 0;
 
@@ -46,8 +45,7 @@ public:
     ~DirectionalLight() {}
 
     // VIRTUAL METHODS
-    void getIllumination(const Vec3f &p, Vec3f &dir, Vec3f &col,
-                         float &distanceToLight) const {
+    void getIllumination(const Vec3f &p, Vec3f &dir, Vec3f &col, float &distanceToLight) const {
         // the direction to the light is the opposite of the
         // direction of the directional light source
         dir = direction * (-1.0f);

@@ -14,6 +14,8 @@ public:
 
     virtual bool intersect(const Ray &r, Hit &h, float tmin) = 0;
 
+    virtual void paint() const = 0;
+
     Material *material;
 
 };
@@ -21,13 +23,15 @@ public:
 //Sphere
 class Sphere : public Object3D {
 public:
-    Sphere(Vec3f c, float r, Material *m) : center(c), radius(r) {
+    Sphere(const Vec3f &c, float r, Material *m) : center(c), radius(r) {
         material = m;
     }
 
     ~Sphere() override {}
 
     bool intersect(const Ray &r, Hit &h, float tmin) override;
+
+    virtual void paint() const;
 
     Vec3f center;
     float radius;
@@ -36,7 +40,7 @@ public:
 //Plane
 class Plane : public Object3D {
 public:
-    Plane(Vec3f &n, float d, Material *m) : normal(n), distance(d) {
+    Plane(const Vec3f &n, float d, Material *m) : normal(n), distance(d) {
         material = m;
         normal.Normalize();
     }
@@ -44,6 +48,8 @@ public:
     ~Plane() override {}
 
     bool intersect(const Ray &r, Hit &h, float tmin) override;
+
+    virtual void paint() const;
 
     Vec3f normal;
     float distance;
@@ -53,7 +59,7 @@ public:
 //Triangle
 class Triangle : public Object3D {
 public:
-    Triangle(Vec3f &a, Vec3f &b, Vec3f &c, Material *m) : a(a), b(b), c(c) {
+    Triangle(const Vec3f &a, const Vec3f &b, const Vec3f &c, Material *m) : a(a), b(b), c(c) {
         material = m;
         Vec3f::Cross3(normal, b - a, c - a);
         normal.Normalize();
@@ -63,20 +69,22 @@ public:
 
     bool intersect(const Ray &r, Hit &h, float tmin) override;
 
-    Vec3f a;
-    Vec3f b;
-    Vec3f c;
+    virtual void paint() const;
+
+    Vec3f a, b, c;
     Vec3f normal;
 };
 
 //Transform
 class Transform : public Object3D {
 public:
-    Transform(Matrix &m, Object3D *o) : matrix(m), object(o) {}
+    Transform(const Matrix &m, Object3D *o) : matrix(m), object(o) {}
 
     ~Transform() override {}
 
     bool intersect(const Ray &r, Hit &h, float tmin) override;
+
+    virtual void paint() const;
 
     Matrix matrix;
     Object3D *object;
@@ -99,7 +107,12 @@ public:
     bool intersect(const Ray &r, Hit &h, float tmin) override;
 
     void addObject(int index, Object3D *obj);
+
+
+    virtual void paint() const;
+
     bool intersectShadowRay(const Ray &r, Hit &h, float tmin);
+
     int num_objects;
     Object3D **objects;
 };

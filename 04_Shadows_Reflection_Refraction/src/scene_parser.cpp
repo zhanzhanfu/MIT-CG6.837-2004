@@ -2,12 +2,11 @@
 #include <string.h>
 
 #include "scene_parser.h"
-#include "matrix.h"
 #include "camera.h"
 #include "light.h"
-#include "material.h"
 #include "object3d.h"
 
+const double M_PI = 3.14159265358979323846;
 #define DegreesToRadians(x) ((M_PI * x) / 180.0f)
 
 // ====================================================================

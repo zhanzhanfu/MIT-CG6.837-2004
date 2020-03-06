@@ -6,17 +6,14 @@
 
 class Material;
 
-// ====================================================================
-// ====================================================================
-
 class Hit {
 
 public:
 
     // CONSTRUCTOR & DESTRUCTOR
-    Hit() : t(INT_MAX), material(nullptr) {}
+    Hit(float t) : t(t), material(nullptr) {}
 
-    Hit(float _t, Material *m, Vec3f n) {
+    Hit(float _t, Material *m, const Vec3f &n) {
         t = _t;
         material = m;
         normal = n;
@@ -41,11 +38,10 @@ public:
     Vec3f getIntersectionPoint() const { return intersectionPoint; }
 
     // MODIFIER
-    void set(float _t, Material *m, Vec3f n, const Ray &ray) {
+    void set(float _t, Material *m, const Vec3f &n, const Ray &ray) {
         t = _t;
         material = m;
         normal = n;
-        normal.Normalize();
         intersectionPoint = ray.pointAtParameter(t);
     }
 

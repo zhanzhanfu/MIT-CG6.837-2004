@@ -1,13 +1,13 @@
 #include "scene_parser.h"
 #include "camera.h"
-#include "object3d.h"
 #include "image.h"
-#include "light.h"
 #include "rayTracer.h"
+#include "glCanvas.h"
 #include <cstring>
 #include <iostream>
+#include <GL/freeglut.h>
 
-
+SceneParser *scene;
 char *input_file = nullptr;
 int width = 100;
 int height = 100;
@@ -20,8 +20,23 @@ bool shade_back = false;
 bool shadows = false;
 int max_bounces = 0;
 float cutoff_weight = 1.0;
+bool gui = false;
+int theta_steps = 0;
+int phi_steps = 0;
+bool gouraud = false;
 
 void argParser(int argc, char **argv);
+
+void renderFunction() {}
+
+void traceRayFunction(float x, float y) {
+    //cout << x << "" << y << endl;
+    Ray ray = scene->getCamera()->generateRay(Vec2f(x, y));
+    RayTracer rayTracer(scene, max_bounces, cutoff_weight);
+    float tmin = 0.001f;
+    Hit hit(INFINITY);
+    Vec3f color = rayTracer.traceRay(ray, tmin, 0, 1.0, hit);
+}
 
 int main(int argc, char **argv) {
 
@@ -29,20 +44,28 @@ int main(int argc, char **argv) {
     // -input scene4_03_mirrored_floor.txt -size 200 200 -output output4_03.tga -shadows -bounces 1 -weight 0.01
     argParser(argc, argv);
 
-    SceneParser scene(input_file);
-    Camera *camera = scene.getCamera();
+    scene = new SceneParser(input_file);
+    Camera *camera = scene->getCamera();
 
     Image image(width, height);
-    image.SetAllPixels(scene.getBackgroundColor());
+    image.SetAllPixels(scene->getBackgroundColor());
 
-    RayTracer rayTracer(&scene, max_bounces, cutoff_weight, shadows, shade_back);
+    if (gui) {
+        glutInit(&argc, argv);
+        GLCanvas glCanvas;
+        glCanvas.initialize(scene, renderFunction, traceRayFunction);
+        return 0;
+    }
+
+    RayTracer rayTracer(scene, max_bounces, cutoff_weight);
     for (int i = 0; i < width; ++i) {
         for (int j = 0; j < height; ++j) {
             float x = float(i) / float(width);
             float y = float(j) / float(height);
             Ray ray = camera->generateRay(Vec2f(x, y));
             float tmin = 0.001f;
-            Vec3f color = rayTracer.traceRay(ray, tmin, 0, 1.0, 1.0);
+            Hit hit(INFINITY);
+            Vec3f color = rayTracer.traceRay(ray, tmin, 0, 1.0, hit);
             image.SetPixel(i, j, color);
         }
     }
@@ -88,6 +111,17 @@ void argParser(int argc, char **argv) {
             shade_back = true;
         } else if (!strcmp(argv[i], "-shadows")) {
             shadows = true;
+        } else if (!strcmp(argv[i], "-gui")) {
+            gui = true;
+        } else if (!strcmp(argv[i], "-tessellation")) {
+            i++;
+            assert(i < argc);
+            theta_steps = atoi(argv[i]);
+            i++;
+            assert(i < argc);
+            phi_steps = atoi(argv[i]);
+        } else if (!strcmp(argv[i], "-gouraud")) {
+            gouraud = true;
         } else if (!strcmp(argv[i], "-bounces")) {
             i++;
             assert(i < argc);

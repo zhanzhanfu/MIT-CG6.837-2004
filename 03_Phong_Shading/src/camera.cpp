@@ -1,6 +1,6 @@
 #include "camera.h"
-#include <GL/freeglut.h>
 #include "matrix.h"
+#include <GL/freeglut.h>
 
 //OrthographicCamera
 Ray OrthographicCamera::generateRay(const Vec2f &point) const {
@@ -9,7 +9,7 @@ Ray OrthographicCamera::generateRay(const Vec2f &point) const {
 }
 
 float OrthographicCamera::getTMin() const {
-    return -INT_MAX;
+    return -INFINITY;
 }
 
 void OrthographicCamera::glInit(int w, int h) {
@@ -21,7 +21,7 @@ void OrthographicCamera::glInit(int w, int h) {
         glOrtho(-size * (float) w / (float) h / 2.0, size * (float) w / (float) h / 2.0, -size / 2.0, size / 2.0, 0.5, 40.0);
 }
 
-void OrthographicCamera::glPlaceCamera(void) {
+void OrthographicCamera::glPlaceCamera() {
     gluLookAt(center.x(), center.y(), center.z(),
               center.x() + direction.x(), center.y() + direction.y(), center.z() + direction.z(),
               up.x(), up.y(), up.z());
@@ -81,7 +81,7 @@ void PerspectiveCamera::glInit(int w, int h) {
     gluPerspective(angle * 180.0 / 3.14159, (float) w / float(h), 0.5, 40.0);
 }
 
-void PerspectiveCamera::glPlaceCamera(void) {
+void PerspectiveCamera::glPlaceCamera() {
     gluLookAt(center.x(), center.y(), center.z(),
               center.x() + direction.x(), center.y() + direction.y(), center.z() + direction.z(),
               up.x(), up.y(), up.z());

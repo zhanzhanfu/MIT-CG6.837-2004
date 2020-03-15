@@ -22,6 +22,8 @@ http://groups.csail.mit.edu/graphics/classes/6.837/F04/index.html
 
 产生 num 个随机点，经过 iters 次矩阵（随机选取）变换，保存到图片中对应位置。 
 
+
+
 ### 1. Ray Casting （完成）
 
 这里使用 Algebraic 和 Geometric 计算交点。
@@ -59,6 +61,8 @@ error: multiple definition of 函数多次定义
 
 在使用 Geometric 法计算交点时，为了得到与样例相符的图片，忽略 t 是否在视线后面，即 camera center 是否在球体内部，永远取 t = min(t1, t2)
 
+
+
 ### 2. Transformations （完成）
 
 **注意点1：**
@@ -78,6 +82,8 @@ scene_16
 球体的 Algebraic 算法中，定义 a = rd.Dot3(rd) 即可解决。
 
 球体的 Geometric 算法中，因为 tt = sqrt(radius * radius - d2) 是长度，所以令 tp = -ro.Dot3(rd) / (rd_len) 也为长度，计算出 t，再令 t = t / rd_len，转换为比例，进行后续步骤。 
+
+
 
 ### 3. Phong_Shaing （完成）
 
@@ -100,6 +106,8 @@ Flat shading (visible facets)  使用 quad 的 normal，quad 是一个平面，�
 Gouraud interpolation 使用顶点 vertex 的 normal，效果比 Flat shading 好。
 
 Phong interpolation 把 vertex.normal 在光栅化中插值为 pixel.normal，精度最高，这是 pipeline 中的做法。
+
+
 
 ### 4. Shadows, Reflection & Refraction（完成）
 
@@ -144,6 +152,55 @@ if(normal.Dot3(rd) > 0)    normal = -1 * normal;
 tmin 这个数据其实可以设置在 hit 类中，但由于延续课程的风格，就放在函数参数中了。
 
 
+
+### 5. Voxel Rendering（完成）
+
+**注意点1：**
+
+修正 Material::Shade 函数，需要在构造函数中初始化 int 类型的变量，不然会产生错误，添加 shade_back 全局变量来决定背面渲染，在上一个 assignment 中被省略了。
+
+**注意点2：**
+
+为了正确渲染，需要把 glCanvas.cpp 中的 glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE); 注释掉
+
+**注意点3：**
+
+```c++
+void Grid::initializeRayMarch(MarchingInfo &mi, const Ray &r, float tmin) const;
+//视点在外面，相交或不相交，取与每个轴相交的三个近点的最大值；
+//视点在里面，因为与每个轴相交的近点都小于 tmin，需要利用 dt 步进来取到刚好大于 tmin 的三个交点的非 -INF 最小值。
+//设置 i,j,k 时，注意 mi.i == nx 的情况，需要 mi.i--；
+void MarchingInfo::nextCell();
+//注意更新 mi.normal；
+```
+
+**注意点4：**
+
+ previsualization 1 简单，直接画六个面比较方便，与 cell 相交的基元的个数决定了 cell 的颜色。
+
+ previsualization 2 写在 Grid::intersect 中，在 traceRayFunction 中调用，使用随机着色。
+
+previsualization 3 省略。
+
+**注意点:5：**
+
+三角形的网格化是对它的 boundingbox 进行网格化，当三角形平行坐标轴，且计算的 start_i == nx 时，需要 start_i--，这在 scene11的 transform 中出现。
+
+**注意点6：**
+
+```c++
+virtual bool is_triangle(); //use a special case for triangles 
+virtual BoundingBox *getTriangleBoundingBox(const Matrix &m) const;
+//定义两个函数来处理三角形的变换矩阵，感觉这样代码结构不是很干净。
+```
+
+**注意点7：**
+
+scene12 未实现， Object3D::insertIntoGrid 中的 Matrix *m，应该是与 Transform 中成员变量 matrix 一起使用，但至于调用  Object3D::insertIntoGrid ，可能是把网格化的操作写在父类中，因为经过 Transform 操作以后，都是生成新的 boundingbox，然后网格化。
+
+
+
+### 6. Grid Acceleration & Solid Textures（未完成）
 
 
 

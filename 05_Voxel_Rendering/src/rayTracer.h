@@ -1,171 +1,121 @@
 #pragma once
 
 #include "scene_parser.h"
-#include "ray.h"
-#include "hit.h"
-#include "camera.h"
+#include "object3d.h"
 #include "light.h"
+#include "rayTree.h"
 #include "grid.h"
-#include "group.h"
+
+extern bool shadows;
+extern bool shade_back;
+extern bool visualize_grid;
+extern int nx, ny, nz;
 
 class RayTracer {
 public:
-    RayTracer(SceneParser *s, int max_bounces, float cutoff_weight, bool shadows, bool shade_back, bool isGrid, const Vec3f &resolution) :
-            scene(s), max_bounces(max_bounces), cutoff_weight(cutoff_weight), shadows(shadows), shade_back(shade_back) {
-        if (isGrid) {
-            int nx = int(resolution.x());
-            int ny = int(resolution.y());
-            int nz = int(resolution.z());
-            Group *group = scene->getGroup();
-            grid = new Grid(group->getBoundingBox(), nx, ny, nz);
-            group->insertIntoGrid(grid, nullptr);
-
+    RayTracer(SceneParser *s, int max_bounces, float min_weight) : scene(s), max_bounces(max_bounces), min_weight(min_weight) {
+        if (nx != 0) {
+            grid = new Grid(s->getGroup()->getBoundingBox(), nx, ny, nz);
+            s->getGroup()->insertIntoGrid(grid, nullptr);
             //print
-            int ans = 0;
-            for (int k = 0; k < nz; ++k) {
-                for (int j = 0; j < ny; ++j) {
-                    for (int i = 0; i < nx; ++i) {
-                        int t = nx * ny * k + nx * j + i;
-                        if (grid->opaque[t]) {
-                            printf("1 ");
-                            ans++;
-                        } else {
-                            printf("0 ");
-                        }
-                    }
-                    printf("\n");
-                }
-                printf("\n");
-            }
-            printf("ans: %d", ans);
-        } else {
+            //int ans = 0;
+            //for (int k = 0; k < nz; ++k) {
+            //    for (int j = 0; j < ny; ++j) {
+            //        for (int i = 0; i < nx; ++i) {
+            //            int index = nx * ny * k + nx * j + i;
+            //            if (!grid->opaque[index].empty()) {
+            //                printf("1 ");
+            //                ans++;
+            //            } else {
+            //                printf("0 ");
+            //            }
+            //        }
+            //        printf("\n");
+            //    }
+            //    printf("\n");
+            //}
+            //printf("ans: %d", ans);
+        } else
             grid = nullptr;
-        }
     }
 
-    ~RayTracer() { delete grid; }
+    ~RayTracer() {}
 
-    Vec3f traceRay(const Ray &ray, float tmin, int bounces, float weight, float indexOfRefraction);
-
-    Vec3f mirrorDirection(const Vec3f &normal, const Vec3f &incoming);
-
-    bool transmittedDirection(const Vec3f &normal, const Vec3f &incoming, float index_i, float index_t, Vec3f &transmitted);
-
-    Vec3f shade(Material *material, const Vec3f &normal, const Vec3f &v, const Vec3f &l, const Vec3f &lightColor);
+    Vec3f traceRay(Ray &ray, float tmin, int bounces, float weight, Hit &hit);
 
     SceneParser *scene;
     int max_bounces;
-    float cutoff_weight;
-    bool shadows;
-    bool shade_back;
+    float min_weight;
     Grid *grid;
+
 };
 
-Vec3f RayTracer::traceRay(const Ray &ray, float tmin, int bounces, float weight, float indexOfRefraction) {
+Vec3f RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight, Hit &hit) {
+    //grid shading
+    if(nx != 0){
+        if (grid->intersect(ray, hit, tmin)) {
+            Vec3f color(0.0, 0.0, 0.0);
+            Vec3f pos = hit.getIntersectionPoint();
+            color += scene->getAmbientLight() * hit.getMaterial()->getDiffuseColor();
+            for (int k = 0; k < scene->getNumLights(); ++k) {
+                Light *light = scene->getLight(k);
+                Vec3f l, lightColor;
+                float dis;
+                light->getIllumination(pos, l, lightColor, dis);
+                color += hit.getMaterial()->Shade(ray, hit, l, lightColor);
+            }
+            return color;
+        } else {
+            return scene->getBackgroundColor();
+        }
+    }
+
+
+    //ray trace shading
     Group *group = scene->getGroup();
-    //shader
-    Hit hit(INFINITY, nullptr, Vec3f());
     if (group->intersect(ray, hit, tmin)) {
+        if (bounces == 0) {
+            RayTree::SetMainSegment(ray, tmin, hit.getT());    //main---------------------------------
+        }
         Vec3f color(0.0, 0.0, 0.0);
-        Vec3f normal = hit.getNormal();
-        Vec3f rd = ray.getDirection();
         Vec3f pos = hit.getIntersectionPoint();
         Material *material = hit.getMaterial();
-        Vec3f v = -1 * rd;
         color += scene->getAmbientLight() * material->getDiffuseColor();
-
-        bool outside = true;
-        if (normal.Dot3(rd) > 0 && shade_back) {
-            normal = -1 * normal;
-            outside = false;
-        }
 
         for (int k = 0; k < scene->getNumLights(); ++k) {
             Light *light = scene->getLight(k);
             Vec3f l, lightColor;
-            float dis; //not be used
+            float dis;
             light->getIllumination(pos, l, lightColor, dis);
             //shadows
+            Ray ray_shadows(pos, l);
+            Hit hit_shadows(dis);
             if (shadows) {
-                Ray ray2(pos, l);
-                Hit hit2(dis, nullptr, Vec3f());
-                if (!group->intersectShadowRay(ray2, hit2, tmin))
-                    color += shade(material, normal, v, l, lightColor);
-
+                if (!group->intersectShadowRay(ray_shadows, hit_shadows, tmin))
+                    color += material->Shade(ray, hit, l, lightColor);
             } else
-                color += shade(material, normal, v, l, lightColor);
+                color += material->Shade(ray, hit, l, lightColor);
+            RayTree::AddShadowSegment(ray_shadows, tmin, hit_shadows.getT());  //shadows---------------------------------
+
         }
         //reflective
-        Vec3f k_ref = material->getReflectiveColor();
-        if (bounces < max_bounces && weight > cutoff_weight && k_ref.Length() > 0) {
-            Vec3f rd_ref = mirrorDirection(normal, rd);
-            Ray ray_ref(pos, rd_ref);
-            Vec3f color_ref = traceRay(ray_ref, tmin, bounces + 1, weight * k_ref.Length(), indexOfRefraction);
-            color += k_ref * color_ref;
+        Ray scattered;
+        Vec3f attenuation;
+        if (bounces < max_bounces && weight > min_weight && material->reflect(ray, hit, attenuation, scattered)) {
+            Hit hit_ref(INFINITY);
+            color += attenuation * traceRay(scattered, tmin, bounces + 1, weight * attenuation.Length(), hit_ref);
+            RayTree::AddReflectedSegment(scattered, tmin, hit_ref.getT());//reflect---------------------------------
         }
         //refraction transparent
-        Vec3f k_trans = material->getTransparentColor();
-        if (bounces < max_bounces && weight > cutoff_weight && k_trans.Length() > 0) {
-            //shade_back
-            float index_i;
-            float index_t;
-            if (outside) {
-                index_i = 1.0;
-                index_t = material->getIndexOfRefraction();
-            } else {
-                index_i = material->getIndexOfRefraction();
-                index_t = 1.0;
-            }
-            Vec3f rd_trans;
-            if (transmittedDirection(normal, rd, index_i, index_t, rd_trans)) {
-                Ray ray_trans(pos, rd_trans);
-                Vec3f color_trans = traceRay(ray_trans, tmin, bounces + 1, weight * k_trans.Length(),
-                                             indexOfRefraction);
-                color += k_trans * color_trans;
-            }
+        if (bounces < max_bounces && weight > min_weight && material->refract(ray, hit, attenuation, scattered)) {
+            Hit hit_ref(INFINITY);
+            color += attenuation * traceRay(scattered, tmin, bounces + 1, weight * attenuation.Length(), hit_ref);
+            RayTree::AddTransmittedSegment(scattered, tmin, hit_ref.getT());//trans---------------------------------
         }
-        //ambient
         return color;
     } else {
         return scene->getBackgroundColor();
     }
 }
 
-
-Vec3f RayTracer::mirrorDirection(const Vec3f &normal, const Vec3f &incoming) {
-    Vec3f out = incoming - 2.0f * normal.Dot3(incoming) * normal;
-    out.Normalize();
-    return out;
-}
-
-bool RayTracer::transmittedDirection(const Vec3f &normal, const Vec3f &incoming, float index_i, float index_t,
-                                     Vec3f &transmitted) {
-    bool flag = false;
-    float nr = index_i / index_t;
-    float d = -1 * normal.Dot3(incoming);
-    float t = 1 - nr * nr * (1 - d * d);
-    if (t > 0) {
-        transmitted = (nr * d - sqrt(t)) * normal + nr * incoming;
-        transmitted.Normalize();
-        flag = true;
-    }
-    return flag;
-}
-
-Vec3f RayTracer::shade(Material *material, const Vec3f &normal, const Vec3f &v, const Vec3f &l, const Vec3f &lightColor) {
-    Vec3f diffuseColor = material->getDiffuseColor();
-    Vec3f specularColor = material->getSpecularColor();
-    float exponent = material->getExponent();
-    //diff
-    float diff = std::max(normal.Dot3(l), 0.0f);
-    Vec3f diffuse = diff * diffuseColor * lightColor;
-    //spec
-    Vec3f h = v + l;
-    h.Normalize();
-    float spec = pow(max(normal.Dot3(h), 0.0f), exponent);
-    Vec3f specular = spec * specularColor * lightColor;
-    //ans
-    Vec3f color = diffuse + specular;
-    return color;
-}
 

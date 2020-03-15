@@ -1,12 +1,11 @@
 #include "scene_parser.h"
 #include "camera.h"
-#include "object3d.h"
 #include "image.h"
-#include "light.h"
 #include "rayTracer.h"
+#include "glCanvas.h"
 #include <cstring>
 #include <iostream>
-
+#include <GL/freeglut.h>
 
 char *input_file = nullptr;
 int width = 100;
@@ -20,41 +19,68 @@ bool shade_back = false;
 bool shadows = false;
 int max_bounces = 0;
 float cutoff_weight = 1.0;
-int nx = 0;
-int ny = 0;
-int nz = 0;
-bool isGrid = false;
+bool gui = false;
+int theta_steps = 0;
+int phi_steps = 0;
+bool gouraud = false;
+bool visualize_grid = false;
+int nx = 0, ny = 0, nz = 0;
+
+SceneParser *scene;
 
 void argParser(int argc, char **argv);
 
-int main(int argc, char **argv) {
+void renderFunction() {}
 
-    // sample command line:
-    // -input scene5_01_sphere.txt -size 200 200 -output output5_01a.tga -grid 3 3 3
+void traceRayFunction(float x, float y) {
+    //cout << x << "" << y << endl;
+    Ray ray = scene->getCamera()->generateRay(Vec2f(x, y));
+    RayTracer rayTracer(scene, max_bounces, cutoff_weight);
+    float tmin = 0.001f;
+    Hit hit(INFINITY);
+    rayTracer.traceRay(ray, tmin, 0, 1.0, hit);
+    Hit hit2(INFINITY);
+    rayTracer.grid->intersect(ray, hit2, tmin);
+}
+
+int main(int argc, char **argv) {
+// sample command line:
+    // -input scene4_03_mirrored_floor.txt -size 200 200 -output output4_03.tga -shadows -bounces 1 -weight 0.01
     argParser(argc, argv);
 
-    SceneParser scene(input_file);
-    Camera *camera = scene.getCamera();
+    scene = new SceneParser(input_file);
+    Camera *camera = scene->getCamera();
 
-    Image *image = new Image(width, height);
-    image->SetAllPixels(scene.getBackgroundColor());
+    Image image(width, height);
+    image.SetAllPixels(scene->getBackgroundColor());
 
-    Vec3f resolution(nx, ny, nz);
-    RayTracer rayTracer(&scene, max_bounces, cutoff_weight, shadows, shade_back, isGrid, resolution);
-    //for (int i = 0; i < width; ++i) {
-    //    for (int j = 0; j < height; ++j) {
-    //        float x = float(i) / float(width);
-    //        float y = float(j) / float(height);
-    //        Ray ray = camera->generateRay(Vec2f(x, y));
-    //        float tmin = 0.001f;
-    //        Vec3f color = rayTracer.traceRay(ray, tmin, 0, 1.0, 1.0);
-    //        image.SetPixel(i, j, color);
-    //    }
-    //}
-//
+    Grid *grid = nullptr;
+    if (nx != 0) {
+        grid = new Grid(scene->getGroup()->getBoundingBox(), nx, ny, nz);
+        scene->getGroup()->insertIntoGrid(grid, nullptr);
+    }
+
+    if (gui) {
+        glutInit(&argc, argv);
+        GLCanvas glCanvas;
+        glCanvas.initialize(scene, renderFunction, traceRayFunction, grid, visualize_grid);
+        return 0;
+    }
+
+    RayTracer rayTracer(scene, max_bounces, cutoff_weight);
+    for (int i = 0; i < width; ++i) {
+        for (int j = 0; j < height; ++j) {
+            float x = float(i) / float(width);
+            float y = float(j) / float(height);
+            Ray ray = camera->generateRay(Vec2f(x, y));
+            float tmin = 0.001f;
+            Hit hit(INFINITY);
+            Vec3f color = rayTracer.traceRay(ray, tmin, 0, 1.0, hit);
+            image.SetPixel(i, j, color);
+        }
+    }
     if (output_file != nullptr)
-        image->SaveTGA(output_file);
-
+        image.SaveTGA(output_file);
     return 0;
 }
 
@@ -93,6 +119,17 @@ void argParser(int argc, char **argv) {
             shade_back = true;
         } else if (!strcmp(argv[i], "-shadows")) {
             shadows = true;
+        } else if (!strcmp(argv[i], "-gui")) {
+            gui = true;
+        } else if (!strcmp(argv[i], "-tessellation")) {
+            i++;
+            assert(i < argc);
+            theta_steps = atoi(argv[i]);
+            i++;
+            assert(i < argc);
+            phi_steps = atoi(argv[i]);
+        } else if (!strcmp(argv[i], "-gouraud")) {
+            gouraud = true;
         } else if (!strcmp(argv[i], "-bounces")) {
             i++;
             assert(i < argc);
@@ -102,7 +139,6 @@ void argParser(int argc, char **argv) {
             assert(i < argc);
             cutoff_weight = atof(argv[i]);
         } else if (!strcmp(argv[i], "-grid")) {
-            isGrid = true;
             i++;
             assert(i < argc);
             nx = atoi(argv[i]);
@@ -112,9 +148,12 @@ void argParser(int argc, char **argv) {
             i++;
             assert(i < argc);
             nz = atoi(argv[i]);
+        } else if (!strcmp(argv[i], "-visualize_grid")) {
+            visualize_grid = true;
         } else {
             printf("whoops error with command line argument %d: '%s'\n", i, argv[i]);
             assert(0);
         }
     }
 }
+

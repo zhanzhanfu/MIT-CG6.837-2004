@@ -24,6 +24,7 @@
 				<Option type="1"/>
 				<Option compiler="clang"/>
 				<Compiler>
+					<Add directory="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/include"/>
 					<Add directory="C:\Program Files\LLVM\lib\clang\9.0.0\include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.21.27702\include"/>
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt"/>
@@ -45,6 +46,7 @@
 				<Option type="1"/>
 				<Option compiler="clang"/>
 				<Compiler>
+					<Add directory="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/include"/>
 					<Add directory="C:\Program Files\LLVM\lib\clang\9.0.0\include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.21.27702\include"/>
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt"/>
@@ -92,22 +94,28 @@
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/camera.h">
 			<Option target="raytracer"/>
 		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/glCanvas.cpp">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/glCanvas.h">
+			<Option target="raytracer"/>
+		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/grid.cpp">
 			<Option target="raytracer"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/grid.h">
 			<Option target="raytracer"/>
 		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/group.cpp">
-			<Option target="raytracer"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/group.h">
-			<Option target="raytracer"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/image.C">
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/image.cpp">
 			<Option target="raytracer"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/image.h">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/light.cpp">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/light.h">
 			<Option target="raytracer"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/main.cpp">
@@ -119,7 +127,13 @@
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/marchingInfo.h">
 			<Option target="raytracer"/>
 		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/matrix.C">
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/material.cpp">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/material.h">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/matrix.cpp">
 			<Option target="raytracer"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/matrix.h">
@@ -131,16 +145,16 @@
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/object3d.h">
 			<Option target="raytracer"/>
 		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/scene_parser.C">
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/rayTree.cpp">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/rayTree.h">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/scene_parser.cpp">
 			<Option target="raytracer"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/scene_parser.h">
-			<Option target="raytracer"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/sphere.cpp">
-			<Option target="raytracer"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/src/sphere.h">
 			<Option target="raytracer"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/05_Voxel_Rendering/CMakeLists.txt">

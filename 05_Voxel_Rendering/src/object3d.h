@@ -19,14 +19,17 @@ public:
 
     virtual void paint() const = 0;
 
+    virtual Material *getMaterial() const { return material; }
+
     virtual BoundingBox *getBoundingBox() const { return boundingBox; }
 
-    virtual void insertIntoGrid(Grid *g, Matrix *m) { return; }
+    virtual void insertIntoGrid(Grid *g, Matrix *m);
 
-    virtual bool is_triangle() { return false; } //use a special case for transformed triangles
+    virtual bool is_triangle() const { return false; } //use a special case for transformed triangles
 
-    virtual BoundingBox *getTriangleBoundingBox(const Matrix &m) const { return boundingBox; } //use a special case for transformed triangles
+    virtual BoundingBox *getTriangleBoundingBox(const Matrix *m) const { return boundingBox; } //use a special case for transformed triangles
 
+protected:
     Material *material;
     BoundingBox *boundingBox;
 };
@@ -47,6 +50,7 @@ public:
 
     virtual void insertIntoGrid(Grid *g, Matrix *m);
 
+private:
     Vec3f center;
     float radius;
 };
@@ -67,6 +71,9 @@ public:
 
     virtual BoundingBox *getBoundingBox() const { return nullptr; }
 
+    virtual void insertIntoGrid(Grid *g, Matrix *m) { return; }
+
+private:
     Vec3f normal;
     float distance;
 
@@ -92,10 +99,11 @@ public:
 
     virtual void insertIntoGrid(Grid *g, Matrix *m);
 
-    virtual bool is_triangle() { return true; }
+    virtual bool is_triangle() const { return true; }
 
-    virtual BoundingBox *getTriangleBoundingBox(const Matrix &m) const;
+    virtual BoundingBox *getTriangleBoundingBox(const Matrix *m) const;
 
+private:
     Vec3f a, b, c;
     Vec3f normal;
 };
@@ -103,7 +111,10 @@ public:
 //Transform
 class Transform : public Object3D {
 public:
-    Transform(const Matrix &m, Object3D *o);
+    Transform(const Matrix &m, Object3D *o) : matrix(m), object(o) {
+        material = object->getMaterial();
+        boundingBox = object->getBoundingBox();
+    }
 
     ~Transform() override {}
 
@@ -111,8 +122,11 @@ public:
 
     virtual void paint() const;
 
+    virtual BoundingBox *getBoundingBox() const;
+
     virtual void insertIntoGrid(Grid *g, Matrix *m);
 
+private:
     Matrix matrix;
     Object3D *object;
 };
@@ -143,6 +157,7 @@ public:
 
     virtual void insertIntoGrid(Grid *g, Matrix *m);
 
+private:
     int num_objects;
     Object3D **objects;
 };

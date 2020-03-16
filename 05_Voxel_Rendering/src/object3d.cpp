@@ -18,6 +18,84 @@ float det3(float a1, float a2, float a3,
             + c1 * det2(a2, a3, b2, b3);
 }
 
+void Object3D::insertIntoGrid(Grid *g, Matrix *m) {
+    assert(boundingBox != nullptr);
+    BoundingBox *bb_new = boundingBox;
+    cout << bb_new->getMin() << " " << bb_new->getMax() << endl;
+    if (m) {
+        Vec3f obj_min = boundingBox->getMin();
+        Vec3f obj_max = boundingBox->getMax();
+        float x1 = obj_min.x(), y1 = obj_min.y(), z1 = obj_min.z();
+        float x2 = obj_max.x(), y2 = obj_max.y(), z2 = obj_max.z();
+        Vec3f v1 = Vec3f(x1, y1, z1);
+        Vec3f v2 = Vec3f(x1, y1, z2);
+        Vec3f v3 = Vec3f(x1, y2, z1);
+        Vec3f v4 = Vec3f(x1, y2, z2);
+        Vec3f v5 = Vec3f(x2, y1, z1);
+        Vec3f v6 = Vec3f(x2, y1, z2);
+        Vec3f v7 = Vec3f(x2, y2, z1);
+        Vec3f v8 = Vec3f(x2, y2, z2);
+        m->Transform(v1);
+        m->Transform(v2);
+        m->Transform(v3);
+        m->Transform(v4);
+        m->Transform(v5);
+        m->Transform(v6);
+        m->Transform(v7);
+        m->Transform(v8);
+        bb_new = new BoundingBox(Vec3f(INFINITY, INFINITY, INFINITY), Vec3f(-INFINITY, -INFINITY, -INFINITY));
+        bb_new->Extend(v1);
+        bb_new->Extend(v2);
+        bb_new->Extend(v3);
+        bb_new->Extend(v4);
+        bb_new->Extend(v5);
+        bb_new->Extend(v6);
+        bb_new->Extend(v7);
+        bb_new->Extend(v8);
+    }
+    cout << bb_new->getMin() << " " << bb_new->getMax() << endl;
+
+    BoundingBox *grid_bb = g->getBoundingBox();
+    Vec3f grid_min = grid_bb->getMin();
+    Vec3f grid_max = grid_bb->getMax();
+    int nx = g->nx;
+    int ny = g->ny;
+    int nz = g->nz;
+    float cellx = (grid_max - grid_min).x() / float(nx);
+    float celly = (grid_max - grid_min).y() / float(ny);
+    float cellz = (grid_max - grid_min).z() / float(nz);
+    Vec3f obj_min = bb_new->getMin();
+    Vec3f obj_max = bb_new->getMax();
+    int start_i = int((obj_min - grid_min).x() / cellx);
+    int start_j = int((obj_min - grid_min).y() / celly);
+    int start_k = int((obj_min - grid_min).z() / cellz);
+    int end_i = int((obj_max - grid_min).x() / cellx);
+    int end_j = int((obj_max - grid_min).y() / celly);
+    int end_k = int((obj_max - grid_min).z() / cellz);
+    if (start_i > nx || start_j > ny || start_k > nz || end_i < 0 || end_j < 0 || end_k < 0)
+        return;
+    start_i = max(start_i, 0);
+    start_j = max(start_j, 0);
+    start_k = max(start_k, 0);
+    end_i = min(end_i, nx - 1);
+    end_j = min(end_j, ny - 1);
+    end_k = min(end_k, nz - 1);
+    //note this
+    if (start_i == nx) start_i--;
+    if (start_j == ny) start_j--;
+    if (start_k == nz) start_k--;
+
+    for (int k = start_k; k <= end_k; ++k) {
+        for (int j = start_j; j <= end_j; ++j) {
+            for (int i = start_i; i <= end_i; ++i) {
+                int index = nx * ny * k + nx * j + i;
+                g->opaque[index].push_back(this);
+            }
+        }
+    }
+}
+
+
 //Sphere
 //Algebraic
 bool Sphere::intersect(const Ray &r, Hit &h, float tmin) {
@@ -123,15 +201,19 @@ void Sphere::paint() const {
 }
 
 void Sphere::insertIntoGrid(Grid *g, Matrix *m) {
-    BoundingBox *bb = g->getBoundingBox();
-    Vec3f minP = bb->getMin();
-    Vec3f maxP = bb->getMax();
+    if (m) {
+        Object3D::insertIntoGrid(g, m);
+        return;
+    }
+    BoundingBox *grid_bb = g->getBoundingBox();
+    Vec3f grid_min = grid_bb->getMin();
+    Vec3f grid_max = grid_bb->getMax();
     int nx = g->nx;
     int ny = g->ny;
     int nz = g->nz;
-    float cellx = (maxP - minP).x() / float(nx);
-    float celly = (maxP - minP).y() / float(ny);
-    float cellz = (maxP - minP).z() / float(nz);
+    float cellx = (grid_max - grid_min).x() / float(nx);
+    float celly = (grid_max - grid_min).y() / float(ny);
+    float cellz = (grid_max - grid_min).z() / float(nz);
     float diagonal = sqrt(cellx * cellx + celly * celly + cellz * cellz);
     for (int k = 0; k < nz; ++k) {
         for (int j = 0; j < ny; ++j) {
@@ -139,7 +221,7 @@ void Sphere::insertIntoGrid(Grid *g, Matrix *m) {
                 float x = (i + 0.5) * cellx;
                 float y = (j + 0.5) * celly;
                 float z = (k + 0.5) * cellz;
-                if ((Vec3f(x, y, z) - (center - minP)).Length() < radius + diagonal / 2) {
+                if ((Vec3f(x, y, z) - (center - grid_min)).Length() < radius + diagonal / 2) {
                     int index = nx * ny * k + nx * j + i;
                     g->opaque[index].push_back(this);
                 }
@@ -224,25 +306,39 @@ void Triangle::paint() const {
     glEnd();
 }
 
+
+BoundingBox *Triangle::getTriangleBoundingBox(const Matrix *m) const {
+    if(!m) return boundingBox;
+    Vec3f aa = a, bb = b, cc = c;
+    m->Transform(aa);
+    m->Transform(bb);
+    m->Transform(cc);
+    BoundingBox *t = new BoundingBox(Vec3f(min(aa.x(), bb.x()), min(aa.y(), bb.y()), min(aa.z(), bb.z())),
+                                     Vec3f(max(aa.x(), bb.x()), max(aa.y(), bb.y()), max(aa.z(), bb.z())));
+    t->Extend(cc);
+    return t;
+}
+
 void Triangle::insertIntoGrid(Grid *g, Matrix *m) {
-    BoundingBox *bb = g->getBoundingBox();
-    Vec3f minP = bb->getMin();
-    Vec3f maxP = bb->getMax();
+    BoundingBox *bb_new = getTriangleBoundingBox(m);
+    BoundingBox *grid_bb = g->getBoundingBox();
+    Vec3f grid_min = grid_bb->getMin();
+    Vec3f grid_max = grid_bb->getMax();
     int nx = g->nx;
     int ny = g->ny;
     int nz = g->nz;
-    float cellx = (maxP - minP).x() / float(nx);
-    float celly = (maxP - minP).y() / float(ny);
-    float cellz = (maxP - minP).z() / float(nz);
-    Vec3f tri_minp = boundingBox->getMin();
-    Vec3f tri_maxp = boundingBox->getMax();
-    int start_i = int((tri_minp - minP).x() / cellx);
-    int start_j = int((tri_minp - minP).y() / celly);
-    int start_k = int((tri_minp - minP).z() / cellz);
-    int end_i = int((tri_maxp - minP).x() / cellx);
-    int end_j = int((tri_maxp - minP).y() / celly);
-    int end_k = int((tri_maxp - minP).z() / cellz);
-    if (start_i >= nx || start_j >= ny || start_k >= nz || end_i < 0 || end_j < 0 || end_k < 0)
+    float cellx = (grid_max - grid_min).x() / float(nx);
+    float celly = (grid_max - grid_min).y() / float(ny);
+    float cellz = (grid_max - grid_min).z() / float(nz);
+    Vec3f obj_min = bb_new->getMin();
+    Vec3f obj_max = bb_new->getMax();
+    int start_i = int((obj_min - grid_min).x() / cellx);
+    int start_j = int((obj_min - grid_min).y() / celly);
+    int start_k = int((obj_min - grid_min).z() / cellz);
+    int end_i = int((obj_max - grid_min).x() / cellx);
+    int end_j = int((obj_max - grid_min).y() / celly);
+    int end_k = int((obj_max - grid_min).z() / cellz);
+    if (start_i > nx || start_j > ny || start_k > nz || end_i < 0 || end_j < 0 || end_k < 0)
         return;
     start_i = max(start_i, 0);
     start_j = max(start_j, 0);
@@ -250,6 +346,11 @@ void Triangle::insertIntoGrid(Grid *g, Matrix *m) {
     end_i = min(end_i, nx - 1);
     end_j = min(end_j, ny - 1);
     end_k = min(end_k, nz - 1);
+    //note this
+    if (start_i == nx) start_i--;
+    if (start_j == ny) start_j--;
+    if (start_k == nz) start_k--;
+
     for (int k = start_k; k <= end_k; ++k) {
         for (int j = start_j; j <= end_j; ++j) {
             for (int i = start_i; i <= end_i; ++i) {
@@ -260,56 +361,8 @@ void Triangle::insertIntoGrid(Grid *g, Matrix *m) {
     }
 }
 
-BoundingBox *Triangle::getTriangleBoundingBox(const Matrix &m) const {
-    Vec3f aa = a, bb = b, cc = c;
-    m.Transform(aa);
-    m.Transform(bb);
-    m.Transform(cc);
-    BoundingBox *t = new BoundingBox(Vec3f(min(aa.x(), bb.x()), min(aa.y(), bb.y()), min(aa.z(), bb.z())),
-                                     Vec3f(max(aa.x(), bb.x()), max(aa.y(), bb.y()), max(aa.z(), bb.z())));
-    t->Extend(cc);
-    return t;
-}
-
 
 //Transform
-Transform::Transform(const Matrix &m, Object3D *o) : matrix(m), object(o) {
-    if (object->is_triangle()) {
-        boundingBox = object->getTriangleBoundingBox(matrix);
-        return;
-    }
-    boundingBox = object->getBoundingBox();
-    Vec3f minp = boundingBox->getMin();
-    Vec3f maxp = boundingBox->getMax();
-    float x1 = minp.x(), y1 = minp.y(), z1 = minp.z();
-    float x2 = maxp.x(), y2 = maxp.y(), z2 = maxp.z();
-    Vec3f v1 = Vec3f(x1, y1, z1);
-    Vec3f v2 = Vec3f(x1, y1, z2);
-    Vec3f v3 = Vec3f(x1, y2, z1);
-    Vec3f v4 = Vec3f(x1, y2, z2);
-    Vec3f v5 = Vec3f(x2, y1, z1);
-    Vec3f v6 = Vec3f(x2, y1, z2);
-    Vec3f v7 = Vec3f(x2, y2, z1);
-    Vec3f v8 = Vec3f(x2, y2, z2);
-    matrix.Transform(v1);
-    matrix.Transform(v2);
-    matrix.Transform(v3);
-    matrix.Transform(v4);
-    matrix.Transform(v5);
-    matrix.Transform(v6);
-    matrix.Transform(v7);
-    matrix.Transform(v8);
-    boundingBox = new BoundingBox(Vec3f(INFINITY, INFINITY, INFINITY), Vec3f(-INFINITY, -INFINITY, -INFINITY));
-    boundingBox->Extend(v1);
-    boundingBox->Extend(v2);
-    boundingBox->Extend(v3);
-    boundingBox->Extend(v4);
-    boundingBox->Extend(v5);
-    boundingBox->Extend(v6);
-    boundingBox->Extend(v7);
-    boundingBox->Extend(v8);
-}
-
 bool Transform::intersect(const Ray &r, Hit &h, float tmin) {
     Vec3f ro = r.getOrigin();
     Vec3f rd = r.getDirection();
@@ -342,46 +395,53 @@ void Transform::paint() const {
 }
 
 void Transform::insertIntoGrid(Grid *g, Matrix *m) {
-    BoundingBox *bb = g->getBoundingBox();
-    Vec3f minP = bb->getMin();
-    Vec3f maxP = bb->getMax();
-    int nx = g->nx;
-    int ny = g->ny;
-    int nz = g->nz;
-    float cellx = (maxP - minP).x() / float(nx);
-    float celly = (maxP - minP).y() / float(ny);
-    float cellz = (maxP - minP).z() / float(nz);
-    Vec3f tri_minp = boundingBox->getMin();
-    Vec3f tri_maxp = boundingBox->getMax();
-    int start_i = int((tri_minp - minP).x() / cellx);
-    int start_j = int((tri_minp - minP).y() / celly);
-    int start_k = int((tri_minp - minP).z() / cellz);
-    int end_i = int((tri_maxp - minP).x() / cellx);
-    int end_j = int((tri_maxp - minP).y() / celly);
-    int end_k = int((tri_maxp - minP).z() / cellz);
-    if (start_i > nx || start_j > ny || start_k > nz || end_i < 0 || end_j < 0 || end_k < 0)
-        return;
-    start_i = max(start_i, 0);
-    start_j = max(start_j, 0);
-    start_k = max(start_k, 0);
-    end_i = min(end_i, nx - 1);
-    end_j = min(end_j, ny - 1);
-    end_k = min(end_k, nz - 1);
-    //note this
-    if(start_i == nx) start_i--;
-    if(start_j == ny) start_j--;
-    if(start_k == nz) start_k--;
-
-    for (int k = start_k; k <= end_k; ++k) {
-        for (int j = start_j; j <= end_j; ++j) {
-            for (int i = start_i; i <= end_i; ++i) {
-                int index = nx * ny * k + nx * j + i;
-                g->opaque[index].push_back(this);
-            }
-        }
+    if(m){
+        Matrix t =  (*m) * matrix;
+        object->insertIntoGrid(g, &t);
     }
+    else{
+        object->insertIntoGrid(g, &matrix);
+    }
+
 }
 
+BoundingBox *Transform::getBoundingBox() const {
+    assert(boundingBox != nullptr);
+    if (object->is_triangle()) {
+        return object->getTriangleBoundingBox(&matrix);
+    }
+    Vec3f obj_min = boundingBox->getMin();
+    Vec3f obj_max = boundingBox->getMax();
+    float x1 = obj_min.x(), y1 = obj_min.y(), z1 = obj_min.z();
+    float x2 = obj_max.x(), y2 = obj_max.y(), z2 = obj_max.z();
+    Vec3f v1 = Vec3f(x1, y1, z1);
+    Vec3f v2 = Vec3f(x1, y1, z2);
+    Vec3f v3 = Vec3f(x1, y2, z1);
+    Vec3f v4 = Vec3f(x1, y2, z2);
+    Vec3f v5 = Vec3f(x2, y1, z1);
+    Vec3f v6 = Vec3f(x2, y1, z2);
+    Vec3f v7 = Vec3f(x2, y2, z1);
+    Vec3f v8 = Vec3f(x2, y2, z2);
+    matrix.Transform(v1);
+    matrix.Transform(v2);
+    matrix.Transform(v3);
+    matrix.Transform(v4);
+    matrix.Transform(v5);
+    matrix.Transform(v6);
+    matrix.Transform(v7);
+    matrix.Transform(v8);
+
+    BoundingBox *bb_new = new BoundingBox(Vec3f(INFINITY, INFINITY, INFINITY), Vec3f(-INFINITY, -INFINITY, -INFINITY));
+    bb_new->Extend(v1);
+    bb_new->Extend(v2);
+    bb_new->Extend(v3);
+    bb_new->Extend(v4);
+    bb_new->Extend(v5);
+    bb_new->Extend(v6);
+    bb_new->Extend(v7);
+    bb_new->Extend(v8);
+    return bb_new;
+}
 
 //Group
 bool Group::intersect(const Ray &r, Hit &h, float tmin) {
@@ -420,3 +480,5 @@ void Group::insertIntoGrid(Grid *g, Matrix *m) {
         objects[i]->insertIntoGrid(g, m);
     }
 }
+
+

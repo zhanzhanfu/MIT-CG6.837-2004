@@ -9,7 +9,6 @@ public:
     Grid(BoundingBox *bb, int nx, int ny, int nz) : nx(nx), ny(ny), nz(nz) {
         boundingBox = bb;
         opaque.resize(nx * ny * nz);
-        material = new PhongMaterial(Vec3f(1, 1, 1));
     }
 
     ~Grid() {}

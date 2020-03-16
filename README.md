@@ -191,12 +191,16 @@ previsualization 3 省略。
 ```c++
 virtual bool is_triangle(); //use a special case for triangles 
 virtual BoundingBox *getTriangleBoundingBox(const Matrix &m) const;
-//定义两个函数来处理三角形的变换矩阵，感觉这样代码结构不是很干净。
+//定义两个函数来获取紧凑的三角形包围盒，但是感觉这样代码结构不是很干净。
 ```
 
 **注意点7：**
 
-scene12 未实现， Object3D::insertIntoGrid 中的 Matrix *m，应该是与 Transform 中成员变量 matrix 一起使用，但至于调用  Object3D::insertIntoGrid ，可能是把网格化的操作写在父类中，因为经过 Transform 操作以后，都是生成新的 boundingbox，然后网格化。
+scene12 中， 当球体被变换时，使用 Object3D::insertIntoGrid，当球体无变换时，使用 cell 跟 center 比较的方法，由于这个父类函数只被球体调用了，所以全部写在球体方法里也可以；
+
+三角形使用 Object3D::insertIntoGrid 方法时，产生松散的包围盒，使用自己单独定义 Triangle::insertIntoGrid 时，产生紧凑的包围盒。
+
+Transform::insertIntoGrid 中进行矩阵相乘。
 
 
 

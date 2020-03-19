@@ -15,12 +15,15 @@ http://groups.csail.mit.edu/graphics/classes/6.837/F04/index.html
 - include 文件夹包括 freeglut 头文件
 - lib 文件夹包括 freeglutd.lib，由 cmake 和 vs 生成
 - out 文件夹包括.exe .txt .tga 和 freeglutd.dll
+- README_PICTURES 包含本文的图片
 
 
 
 ### 0. Iterated Function Systems （完成）
 
 产生 num 个随机点，经过 iters 次矩阵（随机选取）变换，保存到图片中对应位置。 
+
+<img src="README_PICTURES/1.png" alt="1" style="zoom:60%;" />
 
 
 
@@ -61,6 +64,10 @@ error: multiple definition of 函数多次定义
 
 在使用 Geometric 法计算交点时，为了得到与样例相符的图片，忽略 t 是否在视线后面，即 camera center 是否在球体内部，永远取 t = min(t1, t2)
 
+<img src="README_PICTURES/2.png" alt="2"  />
+
+<img src="README_PICTURES/3.png" alt="3"  />
+
 
 
 ### 2. Transformations （完成）
@@ -82,6 +89,10 @@ scene_16
 球体的 Algebraic 算法中，定义 a = rd.Dot3(rd) 即可解决。
 
 球体的 Geometric 算法中，因为 tt = sqrt(radius * radius - d2) 是长度，所以令 tp = -ro.Dot3(rd) / (rd_len) 也为长度，计算出 t，再令 t = t / rd_len，转换为比例，进行后续步骤。 
+
+<img src="README_PICTURES/4.png" alt="4"  />
+
+<img src="README_PICTURES/5.png" alt="5"  />
 
 
 
@@ -106,6 +117,8 @@ Flat shading (visible facets)  使用 quad 的 normal，quad 是一个平面，�
 Gouraud interpolation 使用顶点 vertex 的 normal，效果比 Flat shading 好。
 
 Phong interpolation 把 vertex.normal 在光栅化中插值为 pixel.normal，精度最高，这是 pipeline 中的做法。
+
+<img src="README_PICTURES/6.png" alt="6" style="zoom:80%;" />
 
 
 
@@ -150,6 +163,10 @@ if(normal.Dot3(rd) > 0)    normal = -1 * normal;
 **注意点5：**
 
 tmin 这个数据其实可以设置在 hit 类中，但由于延续课程的风格，就放在函数参数中了。
+
+<img src="README_PICTURES/7.png" alt="7" style="zoom: 50%;" />
+
+<img src="README_PICTURES/8.png" alt="8"  />
 
 
 
@@ -202,9 +219,69 @@ scene12 中， 当球体被变换时，使用 Object3D::insertIntoGrid，当球�
 
 Transform::insertIntoGrid 中进行矩阵相乘。
 
+<img src="README_PICTURES/9.png" alt="9"  />
+
+<img src="README_PICTURES/10.png" alt="10"  />
 
 
-### 6. Grid Acceleration & Solid Textures（未完成）
+
+### 6. Grid Acceleration & Solid Textures（完成）
+
+**注意点1：**
+
+修改 Grid::initializeRayMarch，把  if (rd.x() < 0)  swap(t1_x, t2_x);  替换为 if (t1_x > t2_x) swap(t1_x, t2_x); 因为 rd.x() 可能为 +0 或 -0；
+
+修改 ro inside 部分代码中写错的字母，把 y 写成了 x，若不使用 shadows 或 reflect，这个错误不会暴露。
+
+**注意点2：**
+
+插入 Grid::opaque 中的 Object3D* ，如果是 Transform，则需要把 g->opaque[index].push_back(this); 替换为 g->opaque[index].push_back(new Transform(*m, this));
+
+**注意点3：**
+
+为了避免一条 ray 遍历 cell 的过程中，多次与包含在多个 cell 中的同一个没有交点的 obj 相交，使用 std::set<Object3D *> 来标记，在 Grid::intersect 和 Grid::intersectShadowRay 中使用，渲染 scene6_04_bunny_mesh_200.txt 效果如下：
+
+不使用 grid 结果：          
+
+total intersections        21480230
+
+使用 grid 但不使用 set：
+
+total intersections        956838
+total cells traversed      225285
+
+使用 grid 且 使用 set：
+
+total intersections        619458
+total cells traversed      225285
+
+我们看出，使用 grid 可以大大减少求交，减少了 20 倍，使用 set 可以再减少 1/3 的求交。
+
+**注意点4：**
+
+在 scene6_07_bunny_mesh_40k.txt 中，阴影会产生一丢丢不太一样的地方，三角形个数越多越明显，在bunny_mesh_200 1k 5k 的图片中看不太出来，有可能是 Grid::initializeRayMarch 中 ro inside 代码部分的问题，但是找不到。
+
+<img src="README_PICTURES/11.png" alt="11" style="zoom: 33%;" />
+
+**注意点5：**
+
+纹理部分，除了棋盘格，其他都不太标准。
+
+<img src="README_PICTURES/12.png" alt="12"  />
+
+<img src="README_PICTURES/13.png" alt="13" style="zoom:80%;" />
+
+<img src="README_PICTURES/14.png" alt="14" style="zoom:80%;" />
+
+<img src="README_PICTURES/15.png" alt="15" style="zoom:80%;" />
+
+
+
+### 7. Supersampling and Antialiasing（未完成）
+
+
+
+
 
 
 

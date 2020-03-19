@@ -211,7 +211,7 @@ void Grid::initializeRayMarch(MarchingInfo &mi, const Ray &r, float tmin) const 
         if (t_near == t1_x) {
             mi.normal = Vec3f(-1, 0, 0) * mi.sign_x;
             mi.t_next_x = t1_x + mi.dt_x;
-            mi.t_next_x = t1_y;
+            mi.t_next_y = t1_y;
             mi.t_next_z = t1_z;
         }
         if (t_near == t1_y) {
@@ -223,7 +223,7 @@ void Grid::initializeRayMarch(MarchingInfo &mi, const Ray &r, float tmin) const 
         if (t_near == t1_z) {
             mi.normal = Vec3f(0, 0, -1) * mi.sign_z;
             mi.t_next_x = t1_x;
-            mi.t_next_x = t1_y;
+            mi.t_next_y = t1_y;
             mi.t_next_z = t1_z + mi.dt_z;
         }
     } else { //outside

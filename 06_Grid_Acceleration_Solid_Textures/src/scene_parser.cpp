@@ -247,6 +247,14 @@ void SceneParser::parseMaterials() {
         if (!strcmp(token, "Material") ||
             !strcmp(token, "PhongMaterial")) {
             materials[count] = parsePhongMaterial();
+        } else if (!strcmp(token, "Checkerboard")) {
+            materials[count] = parseCheckerboard(count);
+        } else if (!strcmp(token, "Noise")) {
+            materials[count] = parseNoise(count);
+        } else if (!strcmp(token, "Marble")) {
+            materials[count] = parseMarble(count);
+        } else if (!strcmp(token, "Wood")) {
+            materials[count] = parseWood(count);
         } else {
             printf("Unknown token in parseMaterial: '%s'\n", token);
             exit(0);
@@ -292,6 +300,138 @@ Material *SceneParser::parsePhongMaterial() {
                                          indexOfRefraction);
     return answer;
 }
+
+Material *SceneParser::parseCheckerboard(int count) {
+    char token[MAX_PARSER_TOKEN_LENGTH];
+    getToken(token);
+    assert (!strcmp(token, "{"));
+    Matrix *matrix = NULL;
+    getToken(token);
+    if (!strcmp(token, "Transform")) {
+        matrix = new Matrix();
+        matrix->SetToIdentity();
+        getToken(token);
+        assert (!strcmp(token, "{"));
+        parseMatrixHelper(*matrix, token);
+        assert (!strcmp(token, "}"));
+        getToken(token);
+    }
+    assert (!strcmp(token, "materialIndex"));
+    int m1 = readInt();
+    assert (m1 >= 0 && m1 < count);
+    getToken(token);
+    assert (!strcmp(token, "materialIndex"));
+    int m2 = readInt();
+    assert (m2 >= 0 && m2 < count);
+    getToken(token);
+    assert (!strcmp(token, "}"));
+    return new Checkerboard(matrix, materials[m1], materials[m2]);
+}
+
+
+Material *SceneParser::parseNoise(int count) {
+    char token[MAX_PARSER_TOKEN_LENGTH];
+    getToken(token);
+    assert (!strcmp(token, "{"));
+    Matrix *matrix = NULL;
+    getToken(token);
+    if (!strcmp(token, "Transform")) {
+        matrix = new Matrix();
+        matrix->SetToIdentity();
+        getToken(token);
+        assert (!strcmp(token, "{"));
+        parseMatrixHelper(*matrix, token);
+        assert (!strcmp(token, "}"));
+        getToken(token);
+    }
+    assert (!strcmp(token, "materialIndex"));
+    int m1 = readInt();
+    assert (m1 >= 0 && m1 < count);
+    getToken(token);
+    assert (!strcmp(token, "materialIndex"));
+    int m2 = readInt();
+    assert (m2 >= 0 && m2 < count);
+    getToken(token);
+    assert (!strcmp(token, "octaves"));
+    int octaves = readInt();
+    getToken(token);
+    assert (!strcmp(token, "}"));
+    return new Noise(matrix, materials[m1], materials[m2], octaves);
+}
+
+Material *SceneParser::parseMarble(int count) {
+    char token[MAX_PARSER_TOKEN_LENGTH];
+    getToken(token);
+    assert (!strcmp(token, "{"));
+    Matrix *matrix = NULL;
+    getToken(token);
+    if (!strcmp(token, "Transform")) {
+        matrix = new Matrix();
+        matrix->SetToIdentity();
+        getToken(token);
+        assert (!strcmp(token, "{"));
+        parseMatrixHelper(*matrix, token);
+        assert (!strcmp(token, "}"));
+        getToken(token);
+    }
+    assert (!strcmp(token, "materialIndex"));
+    int m1 = readInt();
+    assert (m1 >= 0 && m1 < count);
+    getToken(token);
+    assert (!strcmp(token, "materialIndex"));
+    int m2 = readInt();
+    assert (m2 >= 0 && m2 < count);
+    getToken(token);
+    assert (!strcmp(token, "octaves"));
+    int octaves = readInt();
+    getToken(token);
+    assert (!strcmp(token, "frequency"));
+    float frequency = readFloat();
+    getToken(token);
+    assert (!strcmp(token, "amplitude"));
+    float amplitude = readFloat();
+    getToken(token);
+    assert (!strcmp(token, "}"));
+    return new Marble(matrix, materials[m1], materials[m2], octaves, frequency, amplitude);
+}
+
+
+Material *SceneParser::parseWood(int count) {
+    char token[MAX_PARSER_TOKEN_LENGTH];
+    getToken(token);
+    assert (!strcmp(token, "{"));
+    Matrix *matrix = NULL;
+    getToken(token);
+    if (!strcmp(token, "Transform")) {
+        matrix = new Matrix();
+        matrix->SetToIdentity();
+        getToken(token);
+        assert (!strcmp(token, "{"));
+        parseMatrixHelper(*matrix, token);
+        assert (!strcmp(token, "}"));
+        getToken(token);
+    }
+    assert (!strcmp(token, "materialIndex"));
+    int m1 = readInt();
+    assert (m1 >= 0 && m1 < count);
+    getToken(token);
+    assert (!strcmp(token, "materialIndex"));
+    int m2 = readInt();
+    assert (m2 >= 0 && m2 < count);
+    getToken(token);
+    assert (!strcmp(token, "octaves"));
+    int octaves = readInt();
+    getToken(token);
+    assert (!strcmp(token, "frequency"));
+    float frequency = readFloat();
+    getToken(token);
+    assert (!strcmp(token, "amplitude"));
+    float amplitude = readFloat();
+    getToken(token);
+    assert (!strcmp(token, "}"));
+    return new Wood(matrix, materials[m1], materials[m2], octaves, frequency, amplitude);
+}
+
 
 // ====================================================================
 // ====================================================================
@@ -497,14 +637,26 @@ Transform *SceneParser::parseTransform() {
     char token[MAX_PARSER_TOKEN_LENGTH];
     Matrix matrix;
     matrix.SetToIdentity();
-    Object3D *object = NULL;
+    // opening brace
     getToken(token);
     assert (!strcmp(token, "{"));
+    // the matrix
+    parseMatrixHelper(matrix, token);
+    // the Object3D
+    Object3D *object = parseObject(token);
+    assert(object != NULL);
+    // closing brace
+    getToken(token);
+    assert (!strcmp(token, "}"));
+    return new Transform(matrix, object);
+}
+
+void SceneParser::parseMatrixHelper(Matrix &matrix, char token[MAX_PARSER_TOKEN_LENGTH]) {
     // read in transformations:
     // apply to the LEFT side of the current matrix (so the first
     // transform in the list is the last applied to the object)
-    getToken(token);
     while (1) {
+        getToken(token);
         if (!strcmp(token, "Scale")) {
             matrix *= Matrix::MakeScale(readVec3f());
         } else if (!strcmp(token, "UniformScale")) {
@@ -541,18 +693,12 @@ Transform *SceneParser::parseTransform() {
             assert (!strcmp(token, "}"));
             matrix = matrix2 * matrix;
         } else {
-            // otherwise this must be an object,
-            // and there are no more transformations
-            object = parseObject(token);
+            // otherwise this must be the thing to transform
             break;
         }
-        getToken(token);
     }
-    assert(object != NULL);
-    getToken(token);
-    assert (!strcmp(token, "}"));
-    return new Transform(matrix, object);
 }
+
 
 // ====================================================================
 // ====================================================================

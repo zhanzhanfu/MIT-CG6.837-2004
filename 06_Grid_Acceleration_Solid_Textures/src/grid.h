@@ -3,6 +3,7 @@
 #include "object3d.h"
 #include <vector>
 #include "marchingInfo.h"
+#include <set>
 
 class Grid : public Object3D {
 public:
@@ -19,7 +20,11 @@ public:
 
     void initializeRayMarch(MarchingInfo &mi, const Ray &r, float tmin) const;
 
+    bool intersectShadowRay(const Ray &r, Hit &hit, float tmin);
+
     int nx, ny, nz;
     //std::vector<bool> opaque;
-    std::vector<std::vector<Object3D*> > opaque;
+    std::vector<std::vector<Object3D *> > opaque;
+    std::set<Object3D *> is_intersected;
+    std::vector<Object3D *> infinitePrimitives;
 };

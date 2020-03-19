@@ -3,6 +3,7 @@
 #include "image.h"
 #include "rayTracer.h"
 #include "glCanvas.h"
+#include "raytracing_stats.h"
 #include <cstring>
 #include <iostream>
 #include <GL/freeglut.h>
@@ -25,62 +26,74 @@ int phi_steps = 0;
 bool gouraud = false;
 bool visualize_grid = false;
 int nx = 0, ny = 0, nz = 0;
+bool stats = false;
 
 SceneParser *scene;
 
 void argParser(int argc, char **argv);
 
-void renderFunction() {}
+void renderFunction() {
+    Camera *camera = scene->getCamera();
+    Image image(width, height);
+    image.SetAllPixels(scene->getBackgroundColor());
+
+    RayTracer rayTracer(scene, max_bounces, cutoff_weight);
+    if (nx != 0)
+        RayTracingStats::Initialize(width, height, rayTracer.getGrid()->getBoundingBox(), nx, ny, nz);
+    else
+        RayTracingStats::Initialize(width, height, nullptr, 0, 0, 0);
+    for (int i = 0; i < width; ++i) {
+        for (int j = 0; j < height; ++j) {
+            RayTracingStats::IncrementNumNonShadowRays();//----------------------------------------------
+            float x = float(i) / float(width);
+            float y = float(j) / float(height);
+            Ray ray = camera->generateRay(Vec2f(x, y));
+            float tmin = 0.0001f;
+            Hit hit(INFINITY);
+            Vec3f color = rayTracer.TraceRay(ray, tmin, 0, 1.0, hit);
+            image.SetPixel(i, j, color);
+        }
+    }
+    if (output_file != nullptr) {
+        image.SaveTGA(output_file);
+    }
+    if (stats) {
+        RayTracingStats::PrintStatistics();
+    }
+}
 
 void traceRayFunction(float x, float y) {
     //cout << x << "" << y << endl;
     Ray ray = scene->getCamera()->generateRay(Vec2f(x, y));
     RayTracer rayTracer(scene, max_bounces, cutoff_weight);
-    float tmin = 0.001f;
+    float tmin = 0.0001f;
     Hit hit(INFINITY);
-    rayTracer.traceRay(ray, tmin, 0, 1.0, hit);
+    rayTracer.TraceRay(ray, tmin, 0, 1.0, hit);
     Hit hit2(INFINITY);
-    rayTracer.grid->intersect(ray, hit2, tmin);
+    rayTracer.getGrid()->intersect(ray, hit2, tmin);
 }
 
 int main(int argc, char **argv) {
 // sample command line:
     // -input scene4_03_mirrored_floor.txt -size 200 200 -output output4_03.tga -shadows -bounces 1 -weight 0.01
     argParser(argc, argv);
-
     scene = new SceneParser(input_file);
-    Camera *camera = scene->getCamera();
 
-    Image image(width, height);
-    image.SetAllPixels(scene->getBackgroundColor());
-
-    Grid *grid = nullptr;
-    if (nx != 0) {
-        grid = new Grid(scene->getGroup()->getBoundingBox(), nx, ny, nz);
-        scene->getGroup()->insertIntoGrid(grid, nullptr);
-    }
-
+    //gui
     if (gui) {
+        Grid *grid = nullptr;
+        if (nx != 0) {
+            grid = new Grid(scene->getGroup()->getBoundingBox(), nx, ny, nz);
+            scene->getGroup()->insertIntoGrid(grid, nullptr);
+        }
         glutInit(&argc, argv);
         GLCanvas glCanvas;
         glCanvas.initialize(scene, renderFunction, traceRayFunction, grid, visualize_grid);
         return 0;
+    } else {
+        renderFunction();
     }
 
-    RayTracer rayTracer(scene, max_bounces, cutoff_weight);
-    for (int i = 0; i < width; ++i) {
-        for (int j = 0; j < height; ++j) {
-            float x = float(i) / float(width);
-            float y = float(j) / float(height);
-            Ray ray = camera->generateRay(Vec2f(x, y));
-            float tmin = 0.001f;
-            Hit hit(INFINITY);
-            Vec3f color = rayTracer.traceRay(ray, tmin, 0, 1.0, hit);
-            image.SetPixel(i, j, color);
-        }
-    }
-    if (output_file != nullptr)
-        image.SaveTGA(output_file);
     return 0;
 }
 
@@ -150,6 +163,8 @@ void argParser(int argc, char **argv) {
             nz = atoi(argv[i]);
         } else if (!strcmp(argv[i], "-visualize_grid")) {
             visualize_grid = true;
+        } else if (!strcmp(argv[i], "-stats")) {
+            stats = true;
         } else {
             printf("whoops error with command line argument %d: '%s'\n", i, argv[i]);
             assert(0);

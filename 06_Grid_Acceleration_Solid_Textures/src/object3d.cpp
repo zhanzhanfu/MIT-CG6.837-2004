@@ -2,8 +2,9 @@
 #include <GL/freeglut.h>
 #include <vector>
 #include "grid.h"
+#include "raytracing_stats.h"
 
-//copy from Matrix.C
+//copy from Matrix.cpp
 float det2(float a, float b,
            float c, float d) {
     return a * d - b * c;
@@ -21,7 +22,6 @@ float det3(float a1, float a2, float a3,
 void Object3D::insertIntoGrid(Grid *g, Matrix *m) {
     assert(boundingBox != nullptr);
     BoundingBox *bb_new = boundingBox;
-    cout << bb_new->getMin() << " " << bb_new->getMax() << endl;
     if (m) {
         Vec3f obj_min = boundingBox->getMin();
         Vec3f obj_max = boundingBox->getMax();
@@ -53,7 +53,6 @@ void Object3D::insertIntoGrid(Grid *g, Matrix *m) {
         bb_new->Extend(v7);
         bb_new->Extend(v8);
     }
-    cout << bb_new->getMin() << " " << bb_new->getMax() << endl;
 
     BoundingBox *grid_bb = g->getBoundingBox();
     Vec3f grid_min = grid_bb->getMin();
@@ -89,7 +88,7 @@ void Object3D::insertIntoGrid(Grid *g, Matrix *m) {
         for (int j = start_j; j <= end_j; ++j) {
             for (int i = start_i; i <= end_i; ++i) {
                 int index = nx * ny * k + nx * j + i;
-                g->opaque[index].push_back(this);
+                g->opaque[index].push_back(new Transform(*m, this));
             }
         }
     }
@@ -99,9 +98,9 @@ void Object3D::insertIntoGrid(Grid *g, Matrix *m) {
 //Sphere
 //Algebraic
 bool Sphere::intersect(const Ray &r, Hit &h, float tmin) {
+    RayTracingStats::IncrementNumIntersections();//-------------------------------------
     Vec3f ro = r.getOrigin() - center;
     Vec3f rd = r.getDirection();
-
     float a = rd.Dot3(rd);
     float b = 2 * ro.Dot3(rd);
     float c = ro.Dot3(ro) - radius * radius;
@@ -232,6 +231,7 @@ void Sphere::insertIntoGrid(Grid *g, Matrix *m) {
 
 //Plane
 bool Plane::intersect(const Ray &r, Hit &h, float tmin) {
+    RayTracingStats::IncrementNumIntersections();//-------------------------------------
     Vec3f ro = r.getOrigin();
     Vec3f rd = r.getDirection();
     float denom = normal.Dot3(rd);
@@ -267,8 +267,13 @@ void Plane::paint() const {
     glEnd();
 }
 
+void Plane::insertIntoGrid(Grid *g, Matrix *m) {
+    g->infinitePrimitives.push_back(this);
+}
+
 //Triangle
 bool Triangle::intersect(const Ray &r, Hit &h, float tmin) {
+    RayTracingStats::IncrementNumIntersections();//-------------------------------------
     Vec3f ro = r.getOrigin();
     Vec3f rd = r.getDirection();
     float abx = a.x() - b.x();
@@ -308,7 +313,7 @@ void Triangle::paint() const {
 
 
 BoundingBox *Triangle::getTriangleBoundingBox(const Matrix *m) const {
-    if(!m) return boundingBox;
+    if (!m) return boundingBox;
     Vec3f aa = a, bb = b, cc = c;
     m->Transform(aa);
     m->Transform(bb);
@@ -355,7 +360,10 @@ void Triangle::insertIntoGrid(Grid *g, Matrix *m) {
         for (int j = start_j; j <= end_j; ++j) {
             for (int i = start_i; i <= end_i; ++i) {
                 int index = nx * ny * k + nx * j + i;
-                g->opaque[index].push_back(this);
+                if(m)
+                    g->opaque[index].push_back(new Transform(*m, this));
+                else
+                    g->opaque[index].push_back(this);
             }
         }
     }
@@ -395,11 +403,10 @@ void Transform::paint() const {
 }
 
 void Transform::insertIntoGrid(Grid *g, Matrix *m) {
-    if(m){
-        Matrix t =  (*m) * matrix;
+    if (m) {
+        Matrix t = (*m) * matrix;
         object->insertIntoGrid(g, &t);
-    }
-    else{
+    } else {
         object->insertIntoGrid(g, &matrix);
     }
 

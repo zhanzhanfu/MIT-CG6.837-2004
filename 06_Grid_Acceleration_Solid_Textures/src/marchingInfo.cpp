@@ -1,7 +1,8 @@
 #include "marchingInfo.h"
-
+#include "raytracing_stats.h"
 
 void MarchingInfo::nextCell() {
+    RayTracingStats::IncrementNumGridCellsTraversed();//----------------------------------
     int flag = 0;
     if (t_next_x <= t_next_y && t_next_x <= t_next_z)
         flag = 1;

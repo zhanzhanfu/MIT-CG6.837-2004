@@ -5,33 +5,38 @@
 #define min3(a, b, c) (((a)<(b))?(((a)<(c))?(a):(c)):(((b)<(c))?(b):(c)))
 #define max3(a, b, c) (((a)>(b))?(((a)>(c))?(a):(c)):(((b)>(c))?(b):(c)))
 
-bool Grid::intersect(const Ray &r, Hit &hit, float tmin) {
-    Vec3f minP = boundingBox->getMin();
-    Vec3f maxP = boundingBox->getMax();
-    float cellx = (maxP - minP).x() / float(nx);
-    float celly = (maxP - minP).y() / float(ny);
-    float cellz = (maxP - minP).z() / float(nz);
+extern bool visualize_grid;
 
-    //debug inside
-    //Vec3f rd = Vec3f(1, 1, 1);
-    //rd.Normalize();
-    //Ray r2(Vec3f(0, 0, 0), rd);
-    //MarchingInfo mi;
-    //initializeRayMarch(mi, r2, tmin);
+bool Grid::intersect(const Ray &r, Hit &hit, float tmin) {
+    bool flag_grid = false;
+    is_intersected.clear();
 
     MarchingInfo mi;
     initializeRayMarch(mi, r, tmin);
 
-    //ray trace
     if (mi.t_cur < hit.getT()) {
         while (mi.i >= 0 && mi.j >= 0 && mi.k >= 0 && mi.i < nx && mi.j < ny && mi.k < nz) {
             int i = mi.i;
             int j = mi.j;
             int k = mi.k;
             int index = nx * ny * k + nx * j + i;
-            if (!opaque[index].empty()) {
+            //visualize_grid = false;
+            if (!visualize_grid && !opaque[index].empty()) {
+                for (Object3D *obj: opaque[index]) {
+                    if(is_intersected.find(obj) != is_intersected.end())
+                        continue;
+                    if(!obj->intersect(r, hit, tmin))
+                        is_intersected.insert(obj);
+                }
+                if (hit.getT() < min3(mi.t_next_x, mi.t_next_y, mi.t_next_z) + 0.0001){
+                    flag_grid = true;
+                    break;
+                }
+            }
+            //visualize_grid = true;
+            if (visualize_grid && !opaque[index].empty()) {
                 PhongMaterial *m;
-                switch (opaque[index].size()){
+                switch (opaque[index].size()) {
                     case 1: m = new PhongMaterial(Vec3f(1, 1, 1)); break;
                     case 2: m = new PhongMaterial(Vec3f(1, 0, 1)); break;
                     case 3: m = new PhongMaterial(Vec3f(0, 1, 1)); break;
@@ -48,25 +53,32 @@ bool Grid::intersect(const Ray &r, Hit &hit, float tmin) {
                 }
                 hit.set(mi.t_cur, m, mi.normal, r);
                 return true;
-
-                //OpenGL
-                //Vec3f a = minP + Vec3f(i * cellx, j * celly, k * cellz);
-                //Vec3f b = minP + Vec3f((i + 1) * cellx, j * celly, k * cellz);
-                //Vec3f c = minP + Vec3f((i + 1) * cellx, (j + 1) * celly, k * cellz);
-                //Vec3f d = minP + Vec3f(i * cellx, (j + 1) * celly, k * cellz);
-                //Vec3f e = minP + Vec3f(i * cellx, j * celly, (k + 1) * cellz);
-                //Vec3f f = minP + Vec3f((i + 1) * cellx, j * celly, (k + 1) * cellz);
-                //Vec3f g = minP + Vec3f((i + 1) * cellx, (j + 1) * celly, (k + 1) * cellz);
-                //Vec3f h = minP + Vec3f(i * cellx, (j + 1) * celly, (k + 1) * cellz);
-                //m = new PhongMaterial(Vec3f(1.0f * rand() / RAND_MAX, 1.0f * rand() / RAND_MAX, 1.0f * rand() / RAND_MAX));
-                //RayTree::AddHitCellFace(a, b, c, d, Vec3f(0, 0, -1), m);
-                //RayTree::AddHitCellFace(e, f, g, h, Vec3f(0, 0, 1), m);
-                //RayTree::AddHitCellFace(b, c, g, f, Vec3f(1, 0, 0), m);
-                //RayTree::AddHitCellFace(a, d, h, e, Vec3f(-1, 0, 0), m);
-                //RayTree::AddHitCellFace(a, b, f, e, Vec3f(0, -1, 0), m);
-                //RayTree::AddHitCellFace(c, d, h, g, Vec3f(0, 1, 0), m);
             }
             mi.nextCell();
+        }
+    }
+
+    //infinitePrimitives
+    if(!visualize_grid){
+        bool flag_infinite = false;
+        Hit hit_infinite(INFINITY);
+        for(Object3D* obj: infinitePrimitives){
+            if(obj->intersect(r, hit_infinite, tmin)){
+                flag_infinite = true;
+            }
+        }
+        if(!flag_infinite) {
+            return flag_grid;
+        }
+        if(!flag_grid){
+            hit = hit_infinite;
+            return flag_infinite;
+        }
+        if(hit_infinite.getT() < hit.getT()){
+            hit = hit_infinite;
+            return true;
+        } else {
+            return true;
         }
     }
     return false;
@@ -92,7 +104,7 @@ void Grid::paint() const {
                     Vec3f g = minP + Vec3f((i + 1) * cellx, (j + 1) * celly, (k + 1) * cellz);
                     Vec3f h = minP + Vec3f(i * cellx, (j + 1) * celly, (k + 1) * cellz);
                     PhongMaterial *m;
-                    switch (opaque[index].size()){
+                    switch (opaque[index].size()) {
                         case 1: m = new PhongMaterial(Vec3f(1, 1, 1)); break;
                         case 2: m = new PhongMaterial(Vec3f(1, 0, 1)); break;
                         case 3: m = new PhongMaterial(Vec3f(0, 1, 1)); break;
@@ -169,24 +181,34 @@ void Grid::initializeRayMarch(MarchingInfo &mi, const Ray &r, float tmin) const 
     float t_near, t_far;
     float t1_x = (minP - ro).x() / rd.x();
     float t2_x = (maxP - ro).x() / rd.x();
-    if (rd.x() < 0)
-        swap(t1_x, t2_x);
+    if (t1_x > t2_x) swap(t1_x, t2_x);
+
     float t1_y = (minP - ro).y() / rd.y();
     float t2_y = (maxP - ro).y() / rd.y();
-    if (rd.y() < 0)
-        swap(t1_y, t2_y);
+    if (t1_y > t2_y) swap(t1_y, t2_y);
+
     float t1_z = (minP - ro).z() / rd.z();
     float t2_z = (maxP - ro).z() / rd.z();
-    if (rd.z() < 0)
-        swap(t1_z, t2_z);
+    if (t1_z > t2_z) swap(t1_z, t2_z);
+
     t_near = max3(t1_x, t1_y, t1_z);
     t_far = min3(t2_x, t2_y, t2_z);
+
+    //if (fabs(ro.y() - 10) > 0.001  && 1.0f * rand() / RAND_MAX < 0.001) {
+    //    cout << r << endl;
+    //    cout << "t1_x: " << t1_x << " t2_x: " << t2_x << endl;
+    //    cout << "t1_y: " << t1_y << " t2_y: " << t2_y << endl;
+    //    cout << "t1_z: " << t1_z << " t2_z: " << t2_z << endl;
+    //    cout << "t_near: " << t_near << endl;
+    //    cout << "t_far: " << t_far << endl;
+    //}
+
     if (t_near >= t_far)
         return;
-    if (t_far <= tmin)
+    if (t_far < tmin)
         return;
-    //inside
-    if (t_near < tmin) {
+
+    if (t_near < tmin) { //inside---
         //cout << "inside" << endl;
         if (t1_x > -INFINITY) {
             while (t1_x < tmin)
@@ -200,18 +222,18 @@ void Grid::initializeRayMarch(MarchingInfo &mi, const Ray &r, float tmin) const 
             while (t1_z < tmin)
                 t1_z += mi.dt_z;
         }
-        //note INFINITY and here use min3
+        //note -INFINITY and here use min3
         //cout << t1_x << " " << t1_y << " " << t1_z << endl;
-        t1_x = t1_x > tmin ? t1_x : INFINITY;
-        t1_y = t1_y > tmin ? t1_y : INFINITY;
-        t1_z = t1_z > tmin ? t1_z : INFINITY;
+        t1_x = t1_x >= tmin ? t1_x : INFINITY;
+        t1_y = t1_y >= tmin ? t1_y : INFINITY;
+        t1_z = t1_z >= tmin ? t1_z : INFINITY;
         //cout << t1_x << " " << t1_y << " " << t1_z << endl;
         t_near = min3(t1_x, t1_y, t1_z);
         mi.t_cur = t_near;
         if (t_near == t1_x) {
             mi.normal = Vec3f(-1, 0, 0) * mi.sign_x;
             mi.t_next_x = t1_x + mi.dt_x;
-            mi.t_next_x = t1_y;
+            mi.t_next_y = t1_y;
             mi.t_next_z = t1_z;
         }
         if (t_near == t1_y) {
@@ -223,9 +245,18 @@ void Grid::initializeRayMarch(MarchingInfo &mi, const Ray &r, float tmin) const 
         if (t_near == t1_z) {
             mi.normal = Vec3f(0, 0, -1) * mi.sign_z;
             mi.t_next_x = t1_x;
-            mi.t_next_x = t1_y;
+            mi.t_next_y = t1_y;
             mi.t_next_z = t1_z + mi.dt_z;
         }
+        //if (fabs(ro.y() - 0.313242) > 0.001  && 1.0f * rand() / RAND_MAX < 0.001) {
+        //    cout << "tmin: " << tmin << endl;
+        //    cout << "t1_x: " << t1_x <<  " dt_x: " << mi.dt_x <<endl;
+        //    cout << "t1_y: " << t1_y <<  " dt_y: " << mi.dt_y <<endl;
+        //    cout << "t1_z: " << t1_z <<  " dt_z: " << mi.dt_z <<endl;
+        //    cout << "t_next_x: " << mi.t_next_x << endl;
+        //    cout << "t_next_y: " << mi.t_next_y << endl;
+        //    cout << "t_next_z: " << mi.t_next_z << endl;
+        //}
     } else { //outside
         //cout << "outside" << endl;
         mi.t_cur = t_near;
@@ -261,4 +292,34 @@ void Grid::initializeRayMarch(MarchingInfo &mi, const Ray &r, float tmin) const 
 
 }
 
+bool Grid::intersectShadowRay(const Ray &r, Hit &hit, float tmin) {
+    is_intersected.clear();
+    MarchingInfo mi;
+    initializeRayMarch(mi, r, tmin);
+    if (mi.t_cur < hit.getT()) {
+        while (mi.i >= 0 && mi.j >= 0 && mi.k >= 0 && mi.i < nx && mi.j < ny && mi.k < nz) {
+            int i = mi.i;
+            int j = mi.j;
+            int k = mi.k;
+            int index = nx * ny * k + nx * j + i;
+            if (!opaque[index].empty()) {
+                for (Object3D *obj: opaque[index]) {
+                    if(is_intersected.find(obj) != is_intersected.end())
+                        continue;
+                    if(!obj->intersect(r, hit, tmin))
+                        is_intersected.insert(obj);
+                    else
+                        return true;
+                }
+            }
+            mi.nextCell();
+        }
+    }
+    for(Object3D *obj: infinitePrimitives){
+        if(obj->intersect(r, hit, tmin))
+            return true;
+    }
+    return false;
+    //return intersect(r, hit, tmin);
+}
 

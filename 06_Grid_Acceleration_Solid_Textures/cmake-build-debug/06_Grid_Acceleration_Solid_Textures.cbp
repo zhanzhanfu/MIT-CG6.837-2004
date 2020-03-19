@@ -145,10 +145,28 @@
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/06_Grid_Acceleration_Solid_Textures/src/object3d.h">
 			<Option target="raytracer"/>
 		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/06_Grid_Acceleration_Solid_Textures/src/perlin_noise.cpp">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/06_Grid_Acceleration_Solid_Textures/src/perlin_noise.h">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/06_Grid_Acceleration_Solid_Textures/src/rayTracer.cpp">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/06_Grid_Acceleration_Solid_Textures/src/rayTracer.h">
+			<Option target="raytracer"/>
+		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/06_Grid_Acceleration_Solid_Textures/src/rayTree.cpp">
 			<Option target="raytracer"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/06_Grid_Acceleration_Solid_Textures/src/rayTree.h">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/06_Grid_Acceleration_Solid_Textures/src/raytracing_stats.cpp">
+			<Option target="raytracer"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/06_Grid_Acceleration_Solid_Textures/src/raytracing_stats.h">
 			<Option target="raytracer"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/06_Grid_Acceleration_Solid_Textures/src/scene_parser.cpp">

@@ -71,7 +71,7 @@ public:
 
     virtual BoundingBox *getBoundingBox() const { return nullptr; }
 
-    virtual void insertIntoGrid(Grid *g, Matrix *m) { return; }
+    virtual void insertIntoGrid(Grid *g, Matrix *m);
 
 private:
     Vec3f normal;

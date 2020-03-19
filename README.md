@@ -19,7 +19,7 @@ http://groups.csail.mit.edu/graphics/classes/6.837/F04/index.html
 
 
 
-### 0. Iterated Function Systems （完成）
+### 0. Iterated Function Systems
 
 产生 num 个随机点，经过 iters 次矩阵（随机选取）变换，保存到图片中对应位置。 
 
@@ -27,7 +27,7 @@ http://groups.csail.mit.edu/graphics/classes/6.837/F04/index.html
 
 
 
-### 1. Ray Casting （完成）
+### 1. Ray Casting
 
 这里使用 Algebraic 和 Geometric 计算交点。
 
@@ -70,7 +70,7 @@ error: multiple definition of 函数多次定义
 
 
 
-### 2. Transformations （完成）
+### 2. Transformations
 
 **注意点1：**
 
@@ -96,7 +96,7 @@ scene_16
 
 
 
-### 3. Phong_Shaing （完成）
+### 3. Phong_Shaing
 
 **注意点1：**
 
@@ -122,7 +122,7 @@ Phong interpolation 把 vertex.normal 在光栅化中插值为 pixel.normal，�
 
 
 
-### 4. Shadows, Reflection & Refraction（完成）
+### 4. Shadows, Reflection & Refraction
 
 **注意点1：**
 
@@ -170,7 +170,7 @@ tmin 这个数据其实可以设置在 hit 类中，但由于延续课程的风�
 
 
 
-### 5. Voxel Rendering（完成）
+### 5. Voxel Rendering
 
 **注意点1：**
 
@@ -225,7 +225,7 @@ Transform::insertIntoGrid 中进行矩阵相乘。
 
 
 
-### 6. Grid Acceleration & Solid Textures（完成）
+### 6. Grid Acceleration & Solid Textures
 
 **注意点1：**
 

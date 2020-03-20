@@ -265,7 +265,7 @@ total cells traversed      225285
 
 **注意点5：**
 
-纹理部分，除了棋盘格，其他都不太标准。
+纹理部分，除了棋盘格，其他都不太标准，matrix 用于把 hit.p 从世界空间转到物体空间。
 
 ![](README_PICTURES/12.png)
 

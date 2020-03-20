@@ -23,7 +23,7 @@ http://groups.csail.mit.edu/graphics/classes/6.837/F04/index.html
 
 产生 num 个随机点，经过 iters 次矩阵（随机选取）变换，保存到图片中对应位置。 
 
-![](README_PICTURES/1.png)
+![](README_PICTURES/0-1.png)
 
 
 
@@ -64,9 +64,9 @@ error: multiple definition of 函数多次定义
 
 在使用 Geometric 法计算交点时，为了得到与样例相符的图片，忽略 t 是否在视线后面，即 camera center 是否在球体内部，永远取 t = min(t1, t2)
 
-![](README_PICTURES/2.png)
+![](README_PICTURES/1-1.png)
 
-![](README_PICTURES/3.png)
+![](README_PICTURES/1-2.png)
 
 
 
@@ -90,9 +90,9 @@ scene_16
 
 球体的 Geometric 算法中，因为 tt = sqrt(radius * radius - d2) 是长度，所以令 tp = -ro.Dot3(rd) / (rd_len) 也为长度，计算出 t，再令 t = t / rd_len，转换为比例，进行后续步骤。 
 
-![](README_PICTURES/4.png)
+![](README_PICTURES/2-1.png)
 
-![](README_PICTURES/5.png)
+![](README_PICTURES/2-2.png)
 
 
 
@@ -118,7 +118,7 @@ Gouraud interpolation 使用顶点 vertex 的 normal，效果比 Flat shading �
 
 Phong interpolation 把 vertex.normal 在光栅化中插值为 pixel.normal，精度最高，这是 pipeline 中的做法。
 
-![](README_PICTURES/6.png)
+![](README_PICTURES/3-1.png)
 
 
 
@@ -164,9 +164,9 @@ if(normal.Dot3(rd) > 0)    normal = -1 * normal;
 
 tmin 这个数据其实可以设置在 hit 类中，但由于延续课程的风格，就放在函数参数中了。
 
-![](README_PICTURES/7.png)
+![](README_PICTURES/4-1.png)
 
-![](README_PICTURES/8.png)
+![](README_PICTURES/4-2.png)
 
 
 
@@ -219,9 +219,9 @@ scene12 中， 当球体被变换时，使用 Object3D::insertIntoGrid，当球�
 
 Transform::insertIntoGrid 中进行矩阵相乘。
 
-![](README_PICTURES/9.png)
+![](README_PICTURES/5-1.png)
 
-![](README_PICTURES/10.png)
+![](README_PICTURES/5-2.png)
 
 
 
@@ -261,27 +261,53 @@ total cells traversed      225285
 
 在 scene6_07_bunny_mesh_40k.txt 中，阴影会产生一丢丢不太一样的地方，三角形个数越多越明显，在bunny_mesh_200 1k 5k 的图片中看不太出来，有可能是 Grid::initializeRayMarch 中 ro inside 代码部分的问题，但是找不到。
 
-![](README_PICTURES/11.png)
+![](README_PICTURES/6-1.png)
 
 **注意点5：**
 
 纹理部分，除了棋盘格，其他都不太标准，matrix 用于把 hit.p 从世界空间转到物体空间。
 
-![](README_PICTURES/12.png)
+![](README_PICTURES/6-2.png)
 
-![](README_PICTURES/13.png)
+![](README_PICTURES/6-3.png)
 
-![](README_PICTURES/14.png)
+![](README_PICTURES/6-4.png)
 
-![](README_PICTURES/15.png)
-
-
-
-### 7. Supersampling and Antialiasing（未完成）
+![](README_PICTURES/6-5.png)
 
 
 
+### 7. Supersampling and Antialiasing
 
+**注意点1：**
+
+ Gaussian filter 中，令  sigma  = radius，为了得到正确的结果，取消 d > 2 * sigma 的判断。
+
+**注意点2：**
+
+Filter::getColor 中，要计算所有在 getSupportRadius() 范围内的像素的采样，另外要求总 weight = 1。
+
+**注意点3：**
+
+渲染 scene7_03_marble_vase.txt 的最后一幅图时，在 Sampler类中，若 d = 1.0f / (size + 1);  会触发
+
+Sample::set 的 assert (p.x() >= 0 && p.x() <= 1); 因此修改为 d = 0.9999f / (size + 1);
+
+![](README_PICTURES/7-1.png)
+
+![](README_PICTURES/7-2.png)
+
+![](README_PICTURES/7-3.png)
+
+![](README_PICTURES/7-4.png)
+
+![](README_PICTURES/7-5.png)
+
+![](README_PICTURES/7-6.png)
+
+
+
+### 8. Curves & Surfaces（未完成）
 
 
 

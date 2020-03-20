@@ -4,6 +4,9 @@
 #include "rayTracer.h"
 #include "glCanvas.h"
 #include "raytracing_stats.h"
+#include "sampler.h"
+#include "filter.h"
+
 #include <cstring>
 #include <iostream>
 #include <GL/freeglut.h>
@@ -27,6 +30,17 @@ bool gouraud = false;
 bool visualize_grid = false;
 int nx = 0, ny = 0, nz = 0;
 bool stats = false;
+bool random_samples = false;
+bool uniform_samples = false;
+bool jittered_samples = false;
+int num_samples = 1;
+char *render_samples_file = nullptr;
+char *render_filter_file = nullptr;
+int zoom_factor = 0;
+bool box_filter = false;
+bool tent_filter = false;
+bool gaussian_filter = false;
+float filter_radius = 0;
 
 SceneParser *scene;
 
@@ -42,20 +56,55 @@ void renderFunction() {
         RayTracingStats::Initialize(width, height, rayTracer.getGrid()->getBoundingBox(), nx, ny, nz);
     else
         RayTracingStats::Initialize(width, height, nullptr, 0, 0, 0);
+
+    Film *film = new Film(width, height, num_samples);
+    Sampler *sampler = nullptr;
+    if (random_samples)
+        sampler = new RandomSampler(num_samples);
+    if (jittered_samples)
+        sampler = new JitteredSampler(num_samples);
+    if (uniform_samples || !sampler)
+        sampler = new UniformSampler(num_samples);
+
+    Filter *filter = nullptr;
+    if (box_filter)
+        filter = new BoxFilter(filter_radius);
+    if (tent_filter)
+        filter = new TentFilter(filter_radius);
+    if (gaussian_filter)
+        filter = new GaussianFilter(filter_radius);
+
     for (int i = 0; i < width; ++i) {
         for (int j = 0; j < height; ++j) {
-            RayTracingStats::IncrementNumNonShadowRays();//----------------------------------------------
-            float x = float(i) / float(width);
-            float y = float(j) / float(height);
-            Ray ray = camera->generateRay(Vec2f(x, y));
-            float tmin = 0.0001f;
-            Hit hit(INFINITY);
-            Vec3f color = rayTracer.TraceRay(ray, tmin, 0, 1.0, hit);
-            image.SetPixel(i, j, color);
+            for (int n = 0; n < num_samples; ++n) {
+                //RayTracingStats::IncrementNumNonShadowRays();//----------------------------------------------
+                Vec2f offset = sampler->getSamplePosition(n);
+                float x = float(i + offset.x()) / float(width);
+                float y = float(j + offset.y()) / float(height);
+                Ray ray = camera->generateRay(Vec2f(x, y));
+                float tmin = 0.0001f;
+                Hit hit(INFINITY);
+                Vec3f c = rayTracer.TraceRay(ray, tmin, 0, 1.0, hit);
+                film->setSample(i, j, n, offset, c);
+            }
         }
     }
-    if (output_file != nullptr) {
+    if (output_file) {
+        for (int i = 0; i < width; ++i) {
+            for (int j = 0; j < height; ++j) {
+                if(filter)
+                    image.SetPixel(i, j, filter->getColor(i, j, film));
+                else
+                    image.SetPixel(i, j, film->getSample(i, j, 0).getColor());
+            }
+        }
         image.SaveTGA(output_file);
+    }
+    if (render_samples_file) {
+        film->renderSamples(render_samples_file, zoom_factor);
+    }
+    if (render_filter_file) {
+        film->renderFilter(render_filter_file, zoom_factor, filter);
     }
     if (stats) {
         RayTracingStats::PrintStatistics();
@@ -165,6 +214,50 @@ void argParser(int argc, char **argv) {
             visualize_grid = true;
         } else if (!strcmp(argv[i], "-stats")) {
             stats = true;
+        } else if (!strcmp(argv[i], "-random_samples")) {
+            random_samples = true;
+            i++;
+            assert(i < argc);
+            num_samples = atoi(argv[i]);
+        } else if (!strcmp(argv[i], "-uniform_samples")) {
+            uniform_samples = true;
+            i++;
+            assert(i < argc);
+            num_samples = atoi(argv[i]);
+        } else if (!strcmp(argv[i], "-jittered_samples")) {
+            jittered_samples = true;
+            i++;
+            assert(i < argc);
+            num_samples = atoi(argv[i]);
+        } else if (!strcmp(argv[i], "-box_filter")) {
+            box_filter = true;
+            i++;
+            assert(i < argc);
+            filter_radius = atof(argv[i]);
+        } else if (!strcmp(argv[i], "-tent_filter")) {
+            tent_filter = true;
+            i++;
+            assert(i < argc);
+            filter_radius = atof(argv[i]);
+        } else if (!strcmp(argv[i], "-gaussian_filter")) {
+            gaussian_filter = true;
+            i++;
+            assert(i < argc);
+            filter_radius = atof(argv[i]);
+        } else if (!strcmp(argv[i], "-render_samples")) {
+            i++;
+            assert(i < argc);
+            render_samples_file = argv[i];
+            i++;
+            assert(i < argc);
+            zoom_factor = atoi(argv[i]);
+        } else if (!strcmp(argv[i], "-render_filter")) {
+            i++;
+            assert(i < argc);
+            render_filter_file = argv[i];
+            i++;
+            assert(i < argc);
+            zoom_factor = atoi(argv[i]);
         } else {
             printf("whoops error with command line argument %d: '%s'\n", i, argv[i]);
             assert(0);

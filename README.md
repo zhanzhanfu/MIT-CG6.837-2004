@@ -348,9 +348,6 @@ raytracer 中 默认 cut_weight 为 1.0，因此要在命令行参数中加上 -
 ![](README_PICTURES/9-4.png)
 
 
+### OVER!
 
-参考：
 
-https://github.com/Birdy-C/MIT-6-837
-
-https://github.com/Aesma/CG-Project3-3

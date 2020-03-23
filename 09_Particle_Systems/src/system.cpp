@@ -5,7 +5,7 @@
 #include "system.h"
 #include "generator.h"
 #include "integrator.h"
-#include "forcefield.h"
+#include "forceField.h"
 #include "particleSet.h"
 #include "particle.h"
 
@@ -76,7 +76,6 @@ void System::PaintGeometry() const {
 
 void System::Paint(float dt, int integrator_color, int draw_vectors,
                    float acceleration_scale, int motion_blur) const {
-
     // setup the integrator color (if appropriate)
     if (integrator_color) {
         Vec3f c = integrator->getColor();

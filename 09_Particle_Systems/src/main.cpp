@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <assert.h>
 
-using namespace std;
 
 #include "glCanvas.h"
 #include "parser.h"
-
+#include <GL/freeglut.h>
 // ====================================================================
 // ====================================================================
 
@@ -54,9 +53,9 @@ int main(int argc, char *argv[]) {
     Parser *parser = new Parser(argv[2]);
 
     // launch viewer!   and it never returns...
+    glutInit(&argc, argv);
     GLCanvas glcanvas;
-    glcanvas.initialize(parser, refresh, dt, integrator_color,
-                        draw_vectors, acceleration_scale, motion_blur);
+    glcanvas.initialize(parser, refresh, dt, integrator_color, draw_vectors, acceleration_scale, motion_blur);
     return 0;
 }
 

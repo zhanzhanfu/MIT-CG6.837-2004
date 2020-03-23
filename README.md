@@ -1,6 +1,4 @@
-# MIT-CG6.837-2004 
-
-### reviewing 正在重写中。
+# MIT-CG6.837-2004
 
 课程网站 
 
@@ -319,9 +317,9 @@ Sample::set 的 assert (p.x() >= 0 && p.x() <= 1); 因此修改为 d = 0.9999f /
 
 **注意点3：**
 
-raytracer 中 默认 cut_weight 为 1.0，因此要在命令行参数中加上 -weight 0.01, 这个太坑了，找了好久
+raytracer 中 默认 cut_weight 为 1.0，因此要在命令行参数中加上 -weight 0.01, 这个太坑了，找了好久。
 
-罐子是自己编辑出来的
+罐子是自己编辑出来的。
 
 ![](README_PICTURES/8-1.png)
 
@@ -335,7 +333,19 @@ raytracer 中 默认 cut_weight 为 1.0，因此要在命令行参数中加上 -
 
 ![](README_PICTURES/8-6.png)
 
-### 9. Particle Systems（未完成）
+### 9. Particle Systems
+
+**注意点1：**
+
+ system9_06 ， Trapezoid  integration 中， velocity 改如何设置，平均 a、b 两点得到的是平均速度，并不能确定 t + dt 时刻的速度。
+
+![](README_PICTURES/9-1.png)
+
+![](README_PICTURES/9-2.png)
+
+![](README_PICTURES/9-3.png)
+
+![](README_PICTURES/9-4.png)
 
 
 

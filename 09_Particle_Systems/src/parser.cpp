@@ -2,7 +2,7 @@
 #include "system.h"
 #include "generator.h"
 #include "integrator.h"
-#include "forcefield.h"
+#include "forceField.h"
 
 // ====================================================================
 // ====================================================================
@@ -18,7 +18,7 @@ Parser::Parser(const char *filename) {
     getToken(token);
     assert (!strcmp(token, "num_systems"));
     num_systems = readInt();
-    systems = new (System *)[num_systems];
+    systems = new System *[num_systems];
 
     // read the systems
     for (int i = 0; i < num_systems; i++) {

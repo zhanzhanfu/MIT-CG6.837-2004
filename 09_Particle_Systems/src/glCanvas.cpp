@@ -15,8 +15,8 @@ Parser *GLCanvas::parser = NULL;
 
 // viewport & mouse
 Vec3f GLCanvas::camera_pos = Vec3f(0, 0, 20);
-int GLCanvas::width = 250;
-int GLCanvas::height = 250;
+int GLCanvas::width = 400;
+int GLCanvas::height = 400;
 int GLCanvas::mouse_button = -1;
 int GLCanvas::mouse_x = 0;
 int GLCanvas::mouse_y = 0;

@@ -82,10 +82,28 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/src/forceField.cpp">
+			<Option target="particle_system"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/src/forceField.h">
+			<Option target="particle_system"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/src/generator.cpp">
+			<Option target="particle_system"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/src/generator.h">
+			<Option target="particle_system"/>
+		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/src/glCanvas.cpp">
 			<Option target="particle_system"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/src/glCanvas.h">
+			<Option target="particle_system"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/src/integrator.cpp">
+			<Option target="particle_system"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/src/integrator.h">
 			<Option target="particle_system"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/src/main.cpp">

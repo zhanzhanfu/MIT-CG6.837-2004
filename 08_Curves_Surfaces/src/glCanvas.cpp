@@ -1,236 +1,21 @@
-#include "glCanvas.h"
-#include "scene_parser.h"
-#include "light.h"
-#include "camera.h"
-
 // Included files for OpenGL Rendering
 #include <GL/freeglut.h>
+
+#include "glCanvas.h"
+#include "arg_parser.h"
+#include "spline.h"
+#include "spline_parser.h"
 
 // ========================================================
 
 // STATIC VARIABLES
-
-// A reference to the function that performs the raytracing
-// This function will get called from the 'keyboard' routine
-void (*GLCanvas::renderFunction)(void);
-
-// A pointer to the global SceneParser
-SceneParser *GLCanvas::scene;
-
-// State of the mouse cursor
-int GLCanvas::mouseButton;
-int GLCanvas::mouseX;
-int GLCanvas::mouseY;
-
-// ========================================================
-// ========================================================
-
-#ifdef SPECULAR_FIX
-// global variable allows (hacky) communication with Material::setMaterial()
-int SPECULAR_FIX_WHICH_PASS = 0;
-#endif
-
-
-// ========================================================
-// Draw the x-, y-, and z-axes with lighting disabled
-// ========================================================
-
-void GLCanvas::drawAxes(void) {
-    glDisable(GL_LIGHTING);
-    // Draw the x-axis in red
-    glColor3f(1.0, 0.0, 0.0);
-    glBegin(GL_LINES);
-    glVertex3f(0, 0, 0);
-    glVertex3f(1, 0, 0);
-    glEnd();
-    glBegin(GL_TRIANGLE_FAN);
-    glVertex3f(1.0, 0.0, 0.0);
-    glVertex3f(0.8, 0.07, 0.0);
-    glVertex3f(0.8, 0.0, 0.07);
-    glVertex3f(0.8, -0.07, 0.0);
-    glVertex3f(0.8, 0.0, -0.07);
-    glVertex3f(0.8, 0.07, 0.0);
-    glEnd();
-
-    // Draw the y-axis in green
-    glColor3f(0.0, 1.0, 0.0);
-    glBegin(GL_LINES);
-    glVertex3f(0, 0, 0);
-    glVertex3f(0, 1, 0);
-    glEnd();
-    glBegin(GL_TRIANGLE_FAN);
-    glVertex3f(0.0, 1.0, 0.0);
-    glVertex3f(0.07, 0.8, 0.0);
-    glVertex3f(0.0, 0.8, 0.07);
-    glVertex3f(-0.07, 0.8, 0.0);
-    glVertex3f(0.0, 0.8, -0.07);
-    glVertex3f(0.07, 0.8, 0.0);
-    glEnd();
-
-    // Draw the z-axis in blue
-    glColor3f(0.0, 0.0, 1.0);
-    glBegin(GL_LINES);
-    glVertex3f(0, 0, 0);
-    glVertex3f(0, 0, 1);
-    glEnd();
-    glBegin(GL_TRIANGLE_FAN);
-    glVertex3f(0.0, 0.0, 1.0);
-    glVertex3f(0.07, 0.0, 0.8);
-    glVertex3f(0.0, 0.07, 0.8);
-    glVertex3f(-0.07, 0.0, 0.8);
-    glVertex3f(0.0, -0.07, 0.8);
-    glVertex3f(0.07, 0.0, 0.8);
-    glEnd();
-}
-
-// ========================================================
-// Callback for the OpenGL display loop.  To request that
-// this function get called, use glutPostRedisplay()
-// ========================================================
-
-void GLCanvas::display(void) {
-    // Clear the display buffer
-    Vec3f bgColor = scene->getBackgroundColor();
-    glClearColor(bgColor.x(), bgColor.y(), bgColor.z(), 1.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // Set the camera parameters
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    scene->getCamera()->glPlaceCamera();
-
-
-    // ========================================================
-    // DRAW AXES
-    // remove this line once you've started rendering primitive objects
-    //drawAxes();
-    // ========================================================
-
-    glEnable(GL_LIGHTING);
-    glEnable(GL_DEPTH_TEST);
-
-    // Place each of the lights in the scene
-    for (int i = 0; i < scene->getNumLights(); i++) {
-        scene->getLight(i)->glInit(i);
-    }
-
-#if !SPECULAR_FIX
-
-    // DEFAULT: single pass rendering
-    // Draw the scene once
-    SPECULAR_FIX_WHICH_PASS = 0;
-    scene->getGroup()->paint();
-
-#else
-
-    // OPTIONAL: 3 pass rendering to fix the specular highlight
-    // artifact for small specular exponents (wide specular lobe)
-
-    // First pass, draw the specular highlights
-    SPECULAR_FIX_WHICH_PASS = 0;
-    scene->getGroup()->paint();
-
-    glDepthFunc(GL_EQUAL);
-    glEnable(GL_BLEND);
-
-    // Second pass, multiply specular highlights by normal dot light
-    SPECULAR_FIX_WHICH_PASS = 1;
-    glBlendFunc(GL_DST_COLOR, GL_ZERO);
-    scene->getGroup()->paint();
-
-    // Third pass, add diffuse & ambient components
-    SPECULAR_FIX_WHICH_PASS = 2;
-    glBlendFunc(GL_ONE, GL_ONE);
-    scene->getGroup()->paint();
-
-    glDepthFunc(GL_LESS);
-    glDisable(GL_BLEND);
-
-#endif
-
-    // Swap the back buffer with the front buffer to display the scene
-    glutSwapBuffers();
-}
-
-// ========================================================
-// Callback function for window resize
-// ========================================================
-
-void GLCanvas::reshape(int w, int h) {
-    // Set the OpenGL viewport to fill the entire window
-    glViewport(0, 0, (GLsizei) w, (GLsizei) h);
-
-    // Set the camera parameters to reflect the changes
-    scene->getCamera()->glInit(w, h);
-
-    // OPTIONAL: If you'd also like to resize your rendering,
-    // add code to do that here
-}
-
-// ========================================================
-// Callback function for mouse click or release
-// ========================================================
-
-void GLCanvas::mouse(int button, int state, int x, int y) {
-    // Save the current state of the mouse.  This will be
-    // used by the 'motion' function
-    mouseButton = button;
-    mouseX = x;
-    mouseY = y;
-}
-
-// ========================================================
-// Callback function for mouse drag
-// ========================================================
-
-void GLCanvas::motion(int x, int y) {
-    // Left button = rotation
-    // (rotate camera around the up and horizontal vectors)
-    if (mouseButton == GLUT_LEFT_BUTTON) {
-        scene->getCamera()->rotateCamera(0.005 * (mouseX - x), 0.005 * (mouseY - y));
-        mouseX = x;
-        mouseY = y;
-    }
-        // Middle button = translation
-        // (move camera perpendicular to the direction vector)
-    else if (mouseButton == GLUT_MIDDLE_BUTTON) {
-        scene->getCamera()->truckCamera((mouseX - x) * 0.05, (y - mouseY) * 0.05);
-        mouseX = x;
-        mouseY = y;
-    }
-        // Right button = zoom
-        // (move camera along the direction vector)
-    else if (mouseButton == GLUT_RIGHT_BUTTON) {
-        scene->getCamera()->dollyCamera((x - mouseX) * 0.05);
-        mouseX = x;
-        mouseY = y;
-    }
-
-    // Redraw the scene with the new camera parameters
-    glutPostRedisplay();
-}
-
-// ========================================================
-// Callback function for keyboard events
-// ========================================================
-
-void GLCanvas::keyboard(unsigned char key, int x, int y) {
-    switch (key) {
-        case 'r':
-        case 'R':
-            printf("Rendering scene... ");
-            fflush(stdout);
-            if (renderFunction) renderFunction();
-            printf("done.\n");
-            break;
-        case 'q':
-        case 'Q':
-            exit(0);
-            break;
-        default:
-            printf("UNKNOWN KEYBOARD INPUT  '%c'\n", key);
-    }
-}
+ArgParser *GLCanvas::args = NULL;
+SplineParser *GLCanvas::splines = NULL;
+int GLCanvas::width = 300;
+int GLCanvas::height = 300;
+float GLCanvas::size = 10;
+Spline *GLCanvas::selected_spline;
+int GLCanvas::selected_control_point;
 
 // ========================================================
 // Initialize all appropriate OpenGL variables, set
@@ -239,31 +24,15 @@ void GLCanvas::keyboard(unsigned char key, int x, int y) {
 // by calling 'exit(0)'
 // ========================================================
 
-void GLCanvas::initialize(SceneParser *_scene, void (*_renderFunction)(void)) {
-    scene = _scene;
-    renderFunction = _renderFunction;
-
-    // Set global lighting parameters
-    glEnable(GL_LIGHTING);
-    glShadeModel(GL_SMOOTH);
-    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+void GLCanvas::initialize(ArgParser *_args, SplineParser *_splines) {
+    args = _args;
+    splines = _splines;
 
     // Set window parameters
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGB);
-    glEnable(GL_DEPTH_TEST);
-    // OPTIONAL: If you'd like to set the window size from
-    // the command line, do that here
-    glutInitWindowSize(400, 400);
+    glutInitWindowSize(width, height);
     glutInitWindowPosition(100, 100);
-    glutCreateWindow("OpenGL Viewer");
-
-    glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
-    glEnable(GL_NORMALIZE);
-
-    // Ambient light
-    Vec3f ambColor = scene->getAmbientLight();
-    GLfloat ambient[] = {ambColor.r(), ambColor.g(), ambColor.b(), 1.0};
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
+    glutCreateWindow("Curve Editor");
 
     // Initialize callback functions
     glutMouseFunc(mouse);
@@ -274,6 +43,152 @@ void GLCanvas::initialize(SceneParser *_scene, void (*_renderFunction)(void)) {
 
     // Enter the main rendering loop
     glutMainLoop();
+}
+
+// ========================================================
+// Callback for the OpenGL display loop.  To request that
+// this function get called, use glutPostRedisplay()
+// ========================================================
+
+void GLCanvas::display(void) {
+
+    // Clear the display buffer
+    glClearColor(0, 0, 0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Set the camera parameters
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(0, 0, 10,
+              0, 0, 0,
+              0, 1, 0);
+
+    // Draw the splines
+    for (int i = 0; i < splines->getNumSplines(); i++) {
+        splines->getSpline(i)->Paint(args);
+    }
+
+    glutSwapBuffers();
+}
+
+// ========================================================
+// Callback function for window resize
+// ========================================================
+
+void GLCanvas::reshape(int w, int h) {
+
+    // Set the OpenGL viewport to fill the entire window
+    glViewport(0, 0, (GLsizei) w, (GLsizei) h);
+
+    // Set the camera parameters to reflect the changes
+    width = w;
+    height = h;
+
+    // orthographic camera
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    float horiz = size / 2.0;
+    float vert = horiz * height / float(width);
+    glOrtho(-horiz, horiz, -vert, vert, 0.1, 1000.0);
+}
+
+// ========================================================
+// Callback function for mouse click or release
+// ========================================================
+
+// must click within 10 pixels of point
+#define PIXEL_EPSILON 10
+
+void GLCanvas::mouseToScreen(int i, int j, float &x, float &y, float &epsilon) {
+    // maps the screen coordinate of the mouse to world space for picking
+    x = ((i / float(width)) - 0.5) * size;
+    y = -((j / float(height)) - 0.5) * size * height / float(width);
+    epsilon = PIXEL_EPSILON * size / float(width);
+}
+
+void GLCanvas::mouse(int button, int state, int i, int j) {
+    // mouse release
+    if (state == 1) {
+        selected_spline = NULL;
+        return;
+    }
+
+    float x, y, epsilon;
+    mouseToScreen(i, j, x, y, epsilon);
+
+    // move control point
+    if (button == GLUT_LEFT_BUTTON) {
+        Spline *s;
+        int pt;
+        // find the closest control point
+        splines->Pick(x, y, epsilon, s, pt);
+        if (s == NULL) return;
+        s->moveControlPoint(pt, x, y);
+        selected_spline = s;
+        selected_control_point = pt;
+    }
+
+    // add control point
+    if (button == GLUT_MIDDLE_BUTTON) {
+        Spline *s;
+        int pt;
+        // find the closest edge (& control point)
+        splines->PickEdge(x, y, epsilon, s, pt);
+        if (s == NULL) return;
+        s->addControlPoint(pt, x, y);
+        selected_spline = s;
+        selected_control_point = pt;
+    }
+
+    // delete control point
+    if (button == GLUT_RIGHT_BUTTON) {
+        Spline *s;
+        int pt;
+        // find the closest control point
+        splines->Pick(x, y, epsilon, s, pt);
+        if (s == NULL) return;
+        s->deleteControlPoint(pt);
+    }
+
+    // Redraw the scene
+    glutPostRedisplay();
+}
+
+// ========================================================
+// Callback function for mouse drag
+// ========================================================
+
+void GLCanvas::motion(int i, int j) {
+    // move control point
+    if (selected_spline == NULL) return;
+    float x, y, epsilon;
+    mouseToScreen(i, j, x, y, epsilon);
+    selected_spline->moveControlPoint(selected_control_point, x, y);
+    // Redraw the scene
+    glutPostRedisplay();
+}
+
+// ========================================================
+// Callback function for keyboard events
+// ========================================================
+
+void GLCanvas::keyboard(unsigned char key, int x, int y) {
+    switch (key) {
+        case 's':
+        case 'S':
+            printf("Saving... ");
+            fflush(stdout);
+            splines->SaveBezier(args);
+            splines->SaveBSpline(args);
+            splines->SaveTriangles(args);
+            printf("done\n");
+            break;
+        case 'q':
+        case 'Q':
+            exit(0);
+        default:
+            printf("UNKNOWN KEYBOARD INPUT  '%c'\n", key);
+    }
 }
 
 // ========================================================

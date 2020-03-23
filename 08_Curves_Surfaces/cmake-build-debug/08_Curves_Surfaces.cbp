@@ -17,8 +17,8 @@
 					<DistClean command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="raytracer">
-				<Option output="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/out/raytracer.exe" prefix_auto="0" extension_auto="0"/>
+			<Target title="curve_editor">
+				<Option output="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/out/curve_editor.exe" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/out"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -33,14 +33,14 @@
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/cmake-build-debug/Makefile&quot;  VERBOSE=1 raytracer"/>
+					<Build command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/cmake-build-debug/Makefile&quot;  VERBOSE=1 curve_editor"/>
 					<CompileFile command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="raytracer/fast">
-				<Option output="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/out/raytracer.exe" prefix_auto="0" extension_auto="0"/>
+			<Target title="curve_editor/fast">
+				<Option output="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/out/curve_editor.exe" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/out"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -55,7 +55,7 @@
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/cmake-build-debug/Makefile&quot;  VERBOSE=1 raytracer/fast"/>
+					<Build command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/cmake-build-debug/Makefile&quot;  VERBOSE=1 curve_editor/fast"/>
 					<CompileFile command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
@@ -82,56 +82,50 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/camera.cpp">
-			<Option target="raytracer"/>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/curve.cpp">
+			<Option target="curve_editor"/>
 		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/camera.h">
-			<Option target="raytracer"/>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/curve.h">
+			<Option target="curve_editor"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/glCanvas.cpp">
-			<Option target="raytracer"/>
+			<Option target="curve_editor"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/glCanvas.h">
-			<Option target="raytracer"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/image.cpp">
-			<Option target="raytracer"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/image.h">
-			<Option target="raytracer"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/light.cpp">
-			<Option target="raytracer"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/light.h">
-			<Option target="raytracer"/>
+			<Option target="curve_editor"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/main.cpp">
-			<Option target="raytracer"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/material.cpp">
-			<Option target="raytracer"/>
-		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/material.h">
-			<Option target="raytracer"/>
+			<Option target="curve_editor"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/matrix.cpp">
-			<Option target="raytracer"/>
+			<Option target="curve_editor"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/matrix.h">
-			<Option target="raytracer"/>
+			<Option target="curve_editor"/>
 		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/object3d.cpp">
-			<Option target="raytracer"/>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/spline.cpp">
+			<Option target="curve_editor"/>
 		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/object3d.h">
-			<Option target="raytracer"/>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/spline.h">
+			<Option target="curve_editor"/>
 		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/scene_parser.cpp">
-			<Option target="raytracer"/>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/spline_parser.cpp">
+			<Option target="curve_editor"/>
 		</Unit>
-		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/scene_parser.h">
-			<Option target="raytracer"/>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/spline_parser.h">
+			<Option target="curve_editor"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/surface.cpp">
+			<Option target="curve_editor"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/surface.h">
+			<Option target="curve_editor"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/triangle_mesh.cpp">
+			<Option target="curve_editor"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/src/triangle_mesh.h">
+			<Option target="curve_editor"/>
 		</Unit>
 		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/08_Curves_Surfaces/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="09_Particle_Systems"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="clang"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="particle_system">
+				<Option output="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/out/particle_system.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/out"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/include"/>
+					<Add directory="C:\Program Files\LLVM\lib\clang\9.0.0\include"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.21.27702\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug/Makefile&quot;  VERBOSE=1 particle_system"/>
+					<CompileFile command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="particle_system/fast">
+				<Option output="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/out/particle_system.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/out"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/include"/>
+					<Add directory="C:\Program Files\LLVM\lib\clang\9.0.0\include"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.21.27702\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug/Makefile&quot;  VERBOSE=1 particle_system/fast"/>
+					<CompileFile command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/mingw-w64/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/src/glCanvas.cpp">
+			<Option target="particle_system"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/src/glCanvas.h">
+			<Option target="particle_system"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/src/main.cpp">
+			<Option target="particle_system"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/src/matrix.cpp">
+			<Option target="particle_system"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/src/matrix.h">
+			<Option target="particle_system"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/src/parser.cpp">
+			<Option target="particle_system"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/src/parser.h">
+			<Option target="particle_system"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/src/particle.cpp">
+			<Option target="particle_system"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/src/particle.h">
+			<Option target="particle_system"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/src/system.cpp">
+			<Option target="particle_system"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/src/system.h">
+			<Option target="particle_system"/>
+		</Unit>
+		<Unit filename="C:/Users/94470/source/CLionProjects/MIT-CG6.837-2004/09_Particle_Systems/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

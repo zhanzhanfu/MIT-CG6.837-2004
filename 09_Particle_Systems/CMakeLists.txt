@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(08_Curves_Surfaces)
+project(09_Particle_Systems)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -9,6 +9,6 @@ link_directories(lib)
 aux_source_directory(src SRC)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/out)
 
-add_executable(curve_editor ${SRC})
-target_link_libraries(curve_editor freeglutd.lib)
+add_executable(particle_system  ${SRC})
+target_link_libraries(particle_system  freeglutd.lib)
 
